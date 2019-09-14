@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		CE56C7ED231DAAD10046EDA3 /* File.m in Sources */ = {isa = PBXBuildFile; fileRef = CE56C7EC231DAAD10046EDA3 /* File.m */; };
+		CE56C832232772820046EDA3 /* utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = CE56C830232772810046EDA3 /* utilities.h */; };
+		CE56C833232772820046EDA3 /* utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = CE56C831232772810046EDA3 /* utilities.m */; };
 		CE91B743231A0E6D003273AF /* FileMonitor.h in Headers */ = {isa = PBXBuildFile; fileRef = CE91B742231A0E6D003273AF /* FileMonitor.h */; };
 		CE91B745231A0E6D003273AF /* FileMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = CE91B744231A0E6D003273AF /* FileMonitor.m */; };
 		CE91B74E231A129D003273AF /* Process.m in Sources */ = {isa = PBXBuildFile; fileRef = CE91B74C231A129D003273AF /* Process.m */; };
@@ -15,6 +17,8 @@
 
 /* Begin PBXFileReference section */
 		CE56C7EC231DAAD10046EDA3 /* File.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = File.m; sourceTree = "<group>"; };
+		CE56C830232772810046EDA3 /* utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utilities.h; sourceTree = "<group>"; };
+		CE56C831232772810046EDA3 /* utilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = utilities.m; sourceTree = "<group>"; };
 		CE91B73F231A0E6D003273AF /* libFileMonitor.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libFileMonitor.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE91B742231A0E6D003273AF /* FileMonitor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileMonitor.h; sourceTree = "<group>"; };
 		CE91B744231A0E6D003273AF /* FileMonitor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FileMonitor.m; sourceTree = "<group>"; };
@@ -55,6 +59,8 @@
 				CE91B744231A0E6D003273AF /* FileMonitor.m */,
 				CE91B74C231A129D003273AF /* Process.m */,
 				CE56C7EC231DAAD10046EDA3 /* File.m */,
+				CE56C830232772810046EDA3 /* utilities.h */,
+				CE56C831232772810046EDA3 /* utilities.m */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -67,6 +73,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE91B743231A0E6D003273AF /* FileMonitor.h in Headers */,
+				CE56C832232772820046EDA3 /* utilities.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -127,9 +134,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CE56C7ED231DAAD10046EDA3 /* File.m in Sources */,
+				CE56C833232772820046EDA3 /* utilities.m in Sources */,
 				CE91B745231A0E6D003273AF /* FileMonitor.m in Sources */,
 				CE91B74E231A129D003273AF /* Process.m in Sources */,
+				CE56C7ED231DAAD10046EDA3 /* File.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

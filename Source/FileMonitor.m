@@ -19,29 +19,10 @@
 es_client_t *endpointClient = nil;
 
 //file events of interest
-NSDictionary* eventsOfInterest = nil;
+es_event_type_t events[] = {ES_EVENT_TYPE_NOTIFY_CREATE, ES_EVENT_TYPE_NOTIFY_OPEN, ES_EVENT_TYPE_NOTIFY_WRITE, ES_EVENT_TYPE_NOTIFY_CLOSE, ES_EVENT_TYPE_NOTIFY_RENAME, ES_EVENT_TYPE_NOTIFY_LINK, ES_EVENT_TYPE_NOTIFY_UNLINK};
 
 @implementation FileMonitor
 
-//init
--(id)init
-{
-    //init super
-    self = [super init];
-    if(nil != self)
-    {
-        //init events of interest
-        eventsOfInterest = @{[NSNumber numberWithInt:ES_EVENT_TYPE_NOTIFY_CREATE]:@"ES_EVENT_TYPE_NOTIFY_CREATE",
-                            [NSNumber numberWithInt:ES_EVENT_TYPE_NOTIFY_OPEN]:@"ES_EVENT_TYPE_NOTIFY_OPEN",
-                            [NSNumber numberWithInt:ES_EVENT_TYPE_NOTIFY_WRITE]:@"ES_EVENT_TYPE_NOTIFY_WRITE",
-                            [NSNumber numberWithInt:ES_EVENT_TYPE_NOTIFY_CLOSE]:@"ES_EVENT_TYPE_NOTIFY_CLOSE",
-                            [NSNumber numberWithInt:ES_EVENT_TYPE_NOTIFY_RENAME]:@"ES_EVENT_TYPE_NOTIFY_RENAME",
-                            [NSNumber numberWithInt:ES_EVENT_TYPE_NOTIFY_LINK]:@"ES_EVENT_TYPE_NOTIFY_LINK",
-                            [NSNumber numberWithInt:ES_EVENT_TYPE_NOTIFY_UNLINK]:@"ES_EVENT_TYPE_NOTIFY_UNLINK"};
-        }
-    
-    return self;
-}
 
 //start monitoring
 -(BOOL)start:(FileCallbackBlock)callback
@@ -49,49 +30,21 @@ NSDictionary* eventsOfInterest = nil;
     //flag
     BOOL started = NO;
     
-    //events (as array)
-    es_event_type_t* events = NULL;
-    
     //result
     es_new_client_result_t result = 0;
-    
-    //alloc events
-    events = malloc(sizeof(es_event_type_t) * eventsOfInterest.count);
-    
-    //init events
-    // es_* APIs expect a C-array...
-    for(int i = 0; i < eventsOfInterest.count; i++)
-    {
-        //add event
-        events[i] = [eventsOfInterest.allKeys[i] intValue];
-    }
     
     //sync
     @synchronized (self)
     {
     
     //create client
-    // callback invokes (user) callback for new processes
-    result = es_new_client(&endpointClient, ^(es_client_t *cleint, const es_message_t *message)
+    // callback invoked on file events
+    result = es_new_client(&endpointClient, ^(es_client_t *client, const es_message_t *message)
     {
-        //new file event
+        //new file obj
         File* file = nil;
         
-        //ignore non-notify messages
-        if(ES_ACTION_TYPE_NOTIFY != message->action_type)
-        {
-            //ignore
-            return;
-        }
-        
-        //ignore non-msg's of interest
-        if(nil == [eventsOfInterest objectForKey:[NSNumber numberWithInt:message->event_type]])
-        {
-            //ignore
-            return;
-        }
-        
-        //init process obj
+        //init file obj
         file = [[File alloc] init:(es_message_t* _Nonnull)message];
         if(nil != file)
         {
@@ -126,7 +79,7 @@ NSDictionary* eventsOfInterest = nil;
     es_mute_path_literal(endpointClient, [NSProcessInfo.processInfo.arguments[0] UTF8String]);
     
     //subscribe
-    if(ES_RETURN_SUCCESS != es_subscribe(endpointClient, events, (u_int32_t)eventsOfInterest.count))
+    if(ES_RETURN_SUCCESS != es_subscribe(endpointClient, events, sizeof(events)/sizeof(events[0])))
     {
         //err msg
         NSLog(@"ERROR: es_subscribe() failed");
@@ -141,14 +94,6 @@ NSDictionary* eventsOfInterest = nil;
     started = YES;
     
 bail:
-    
-    //free events
-    if(NULL != events)
-    {
-        //free
-        free(events);
-        events = NULL;
-    }
     
     return started;
 }
@@ -201,30 +146,3 @@ bail:
 }
 
 @end
-
-//helper function
-// convert es_string_token_t to string
-NSString* convertStringToken(es_string_token_t* stringToken)
-{
-    //string
-    NSString* string = nil;
-    
-    //init to empty string
-    string = [NSString string];
-    
-    //sanity check(s)
-    if( (NULL == stringToken) ||
-        (0 == stringToken->length) ||
-        (NULL == stringToken->data) )
-    {
-        //bail
-        goto bail;
-    }
-        
-    //convert to data, then to string
-    string = [NSString stringWithUTF8String:[[NSData dataWithBytes:stringToken->data length:stringToken->length] bytes]];
-    
-bail:
-    
-    return string;
-}

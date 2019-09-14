@@ -13,9 +13,6 @@
 #import "utilities.h"
 #import "FileMonitor.h"
 
-//events
-extern NSDictionary* eventsOfInterest;
-
 /* FUNCTIONS */
 
 @implementation File
@@ -139,7 +136,7 @@ extern NSDictionary* eventsOfInterest;
 -(NSString *)description
 {
     //pretty print
-    return [NSString stringWithFormat: @"%@: \nsource path: %@\ndestination path: %@\nprocess: %@", eventsOfInterest[[NSNumber numberWithInt:self.event]], self.sourcePath, self.destinationPath, process];
+    return [NSString stringWithFormat: @"source path: %@\ndestination path: %@\nprocess: %@", self.sourcePath, self.destinationPath, process];
 }
 
 @end
