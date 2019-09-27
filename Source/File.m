@@ -54,7 +54,7 @@
         case ES_EVENT_TYPE_NOTIFY_CREATE:
             
             //set path
-            self.destinationPath = convertStringToken(&message->event.create.target->path);
+            self.destinationPath = convertStringToken(&message->event.create.destination.new_path.filename);
             
             break;
             
