@@ -12,7 +12,6 @@
 		CDB724412374DB72003A3364 /* libFileMonitor.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CDB724402374DB72003A3364 /* libFileMonitor.a */; };
 		CDBF5B842374D63F00B78F3D /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = CDBF5B7C2374D63F00B78F3D /* MainMenu.xib */; };
 		CDBF5B852374D63F00B78F3D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CDBF5B7D2374D63F00B78F3D /* main.m */; };
-		CDBF5B862374D63F00B78F3D /* Base.lproj in Resources */ = {isa = PBXBuildFile; fileRef = CDBF5B7E2374D63F00B78F3D /* Base.lproj */; };
 		CDBF5B882374D63F00B78F3D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CDBF5B812374D63F00B78F3D /* AppDelegate.m */; };
 		CDBF5B892374D63F00B78F3D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CDBF5B832374D63F00B78F3D /* Assets.xcassets */; };
 /* End PBXBuildFile section */
@@ -102,7 +101,6 @@
 				CD38A8392358B410004EBB67 /* Sources */,
 				CD38A83A2358B410004EBB67 /* Frameworks */,
 				CD38A83B2358B410004EBB67 /* Resources */,
-				CD8B21752366A5A600D3FE6F /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -150,33 +148,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CDBF5B862374D63F00B78F3D /* Base.lproj in Resources */,
 				CDBF5B842374D63F00B78F3D /* MainMenu.xib in Resources */,
 				CDBF5B892374D63F00B78F3D /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		CD8B21752366A5A600D3FE6F /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "#copy app into Release/\nmkdir -p $PROJECT_DIR/Release/\nrm -rf $PROJECT_DIR/Release/*\ncp -R $BUILT_PRODUCTS_DIR/$FULL_PRODUCT_NAME $PROJECT_DIR/Release/\n";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		CD38A8392358B410004EBB67 /* Sources */ = {

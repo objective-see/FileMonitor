@@ -144,7 +144,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#copy header file and library into Release/\nmkdir -p $PROJECT_DIR/Release/\nrm $PROJECT_DIR/Release/*\n\ncp $PROJECT_DIR/Source/FileMonitor.h $PROJECT_DIR/Release/\ncp $BUILT_PRODUCTS_DIR/$FULL_PRODUCT_NAME $PROJECT_DIR/Release/\n";
+			shellScript = "#copy header file and library into Release/\nmkdir -p \"$PROJECT_DIR/Release/\"\nrm \"$PROJECT_DIR/Release/*\"\n\ncp \"$PROJECT_DIR/Source/FileMonitor.h\" \"$PROJECT_DIR/Release/\"\ncp \"$BUILT_PRODUCTS_DIR/$FULL_PRODUCT_NAME\" \"$PROJECT_DIR/Release/\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
