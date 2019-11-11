@@ -174,7 +174,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#copy app into Release/\ncp -R $BUILT_PRODUCTS_DIR/$FULL_PRODUCT_NAME $PROJECT_DIR/Release/\n";
+			shellScript = "#copy app into Release/\nmkdir -p $PROJECT_DIR/Release/\nrm -rf $PROJECT_DIR/Release/*\ncp -R $BUILT_PRODUCTS_DIR/$FULL_PRODUCT_NAME $PROJECT_DIR/Release/\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
