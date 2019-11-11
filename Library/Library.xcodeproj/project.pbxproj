@@ -7,21 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		CE56C7ED231DAAD10046EDA3 /* File.m in Sources */ = {isa = PBXBuildFile; fileRef = CE56C7EC231DAAD10046EDA3 /* File.m */; };
-		CE56C832232772820046EDA3 /* utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = CE56C830232772810046EDA3 /* utilities.h */; };
-		CE56C833232772820046EDA3 /* utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = CE56C831232772810046EDA3 /* utilities.m */; };
-		CE91B743231A0E6D003273AF /* FileMonitor.h in Headers */ = {isa = PBXBuildFile; fileRef = CE91B742231A0E6D003273AF /* FileMonitor.h */; };
-		CE91B745231A0E6D003273AF /* FileMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = CE91B744231A0E6D003273AF /* FileMonitor.m */; };
+		CDB7243D2374D915003A3364 /* File.m in Sources */ = {isa = PBXBuildFile; fileRef = CDB7243A2374D915003A3364 /* File.m */; };
+		CDB7243E2374D915003A3364 /* FileMonitor.h in Headers */ = {isa = PBXBuildFile; fileRef = CDB7243B2374D915003A3364 /* FileMonitor.h */; };
+		CDB7243F2374D915003A3364 /* FileMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = CDB7243C2374D915003A3364 /* FileMonitor.m */; };
+		CE532DF8231C78E500B7DDD6 /* utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = CE532DF7231C78E500B7DDD6 /* utilities.m */; };
 		CE91B74E231A129D003273AF /* Process.m in Sources */ = {isa = PBXBuildFile; fileRef = CE91B74C231A129D003273AF /* Process.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		CE56C7EC231DAAD10046EDA3 /* File.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = File.m; sourceTree = "<group>"; };
-		CE56C830232772810046EDA3 /* utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utilities.h; sourceTree = "<group>"; };
-		CE56C831232772810046EDA3 /* utilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = utilities.m; sourceTree = "<group>"; };
+		CDB7243A2374D915003A3364 /* File.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = File.m; sourceTree = "<group>"; };
+		CDB7243B2374D915003A3364 /* FileMonitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileMonitor.h; sourceTree = "<group>"; };
+		CDB7243C2374D915003A3364 /* FileMonitor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileMonitor.m; sourceTree = "<group>"; };
+		CE532DF7231C78E500B7DDD6 /* utilities.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = utilities.m; sourceTree = "<group>"; };
+		CE532DF9231C791B00B7DDD6 /* utilities.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = utilities.h; sourceTree = "<group>"; };
 		CE91B73F231A0E6D003273AF /* libFileMonitor.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libFileMonitor.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		CE91B742231A0E6D003273AF /* FileMonitor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileMonitor.h; sourceTree = "<group>"; };
-		CE91B744231A0E6D003273AF /* FileMonitor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FileMonitor.m; sourceTree = "<group>"; };
 		CE91B74C231A129D003273AF /* Process.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Process.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -55,12 +54,12 @@
 		CE91B741231A0E6D003273AF /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				CE91B742231A0E6D003273AF /* FileMonitor.h */,
-				CE91B744231A0E6D003273AF /* FileMonitor.m */,
+				CDB7243A2374D915003A3364 /* File.m */,
+				CDB7243B2374D915003A3364 /* FileMonitor.h */,
+				CDB7243C2374D915003A3364 /* FileMonitor.m */,
 				CE91B74C231A129D003273AF /* Process.m */,
-				CE56C7EC231DAAD10046EDA3 /* File.m */,
-				CE56C830232772810046EDA3 /* utilities.h */,
-				CE56C831232772810046EDA3 /* utilities.m */,
+				CE532DF7231C78E500B7DDD6 /* utilities.m */,
+				CE532DF9231C791B00B7DDD6 /* utilities.h */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -72,27 +71,27 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CE91B743231A0E6D003273AF /* FileMonitor.h in Headers */,
-				CE56C832232772820046EDA3 /* utilities.h in Headers */,
+				CDB7243E2374D915003A3364 /* FileMonitor.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		CE91B73E231A0E6D003273AF /* FileMonitor */ = {
+		CE91B73E231A0E6D003273AF /* Library */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = CE91B748231A0E6D003273AF /* Build configuration list for PBXNativeTarget "FileMonitor" */;
+			buildConfigurationList = CE91B748231A0E6D003273AF /* Build configuration list for PBXNativeTarget "Library" */;
 			buildPhases = (
 				CE91B73B231A0E6D003273AF /* Headers */,
 				CE91B73C231A0E6D003273AF /* Sources */,
 				CE91B73D231A0E6D003273AF /* Frameworks */,
+				CD3F5C3A234F870B00FE12C4 /* ShellScript */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = FileMonitor;
+			name = Library;
 			productName = processMonitor;
 			productReference = CE91B73F231A0E6D003273AF /* libFileMonitor.a */;
 			productType = "com.apple.product-type.library.static";
@@ -111,7 +110,7 @@
 					};
 				};
 			};
-			buildConfigurationList = CE91B73A231A0E6D003273AF /* Build configuration list for PBXProject "FileMonitor" */;
+			buildConfigurationList = CE91B73A231A0E6D003273AF /* Build configuration list for PBXProject "Library" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -124,20 +123,40 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				CE91B73E231A0E6D003273AF /* FileMonitor */,
+				CE91B73E231A0E6D003273AF /* Library */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		CD3F5C3A234F870B00FE12C4 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#copy header file and library into Release/\ncp $PROJECT_DIR/Source/FileMonitor.h $PROJECT_DIR/Release/\ncp $BUILT_PRODUCTS_DIR/$FULL_PRODUCT_NAME $PROJECT_DIR/Release/\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		CE91B73C231A0E6D003273AF /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CE56C833232772820046EDA3 /* utilities.m in Sources */,
-				CE91B745231A0E6D003273AF /* FileMonitor.m in Sources */,
+				CDB7243F2374D915003A3364 /* FileMonitor.m in Sources */,
+				CE532DF8231C78E500B7DDD6 /* utilities.m in Sources */,
+				CDB7243D2374D915003A3364 /* File.m in Sources */,
 				CE91B74E231A129D003273AF /* Process.m in Sources */,
-				CE56C7ED231DAAD10046EDA3 /* File.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -258,7 +277,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				EXECUTABLE_PREFIX = lib;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = FileMonitor;
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
@@ -268,7 +287,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				EXECUTABLE_PREFIX = lib;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = FileMonitor;
 				SKIP_INSTALL = YES;
 			};
 			name = Release;
@@ -276,7 +295,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		CE91B73A231A0E6D003273AF /* Build configuration list for PBXProject "FileMonitor" */ = {
+		CE91B73A231A0E6D003273AF /* Build configuration list for PBXProject "Library" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CE91B746231A0E6D003273AF /* Debug */,
@@ -285,7 +304,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		CE91B748231A0E6D003273AF /* Build configuration list for PBXNativeTarget "FileMonitor" */ = {
+		CE91B748231A0E6D003273AF /* Build configuration list for PBXNativeTarget "Library" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CE91B749231A0E6D003273AF /* Debug */,

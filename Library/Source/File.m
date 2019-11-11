@@ -1,6 +1,6 @@
 //
 //  Process.m
-//  ProcessMonitor
+//  FileMonitor
 //
 //  Created by Patrick Wardle on 9/1/19.
 //  Copyright © 2019 Objective-See. All rights reserved.
@@ -54,7 +54,7 @@
         case ES_EVENT_TYPE_NOTIFY_CREATE:
             
             //set path
-            self.destinationPath = convertStringToken(&message->event.create.target->path);
+            self.destinationPath = convertStringToken(&message->event.create.destination.new_path.filename);
             
             break;
             
@@ -132,11 +132,89 @@
     return;
 }
 
+
 //for pretty printing
+// though we convert to JSON
 -(NSString *)description
 {
-    //pretty print
-    return [NSString stringWithFormat: @"source path: %@\ndestination path: %@\nprocess: %@", self.sourcePath, self.destinationPath, process];
+    //description
+    NSMutableString* description = nil;
+
+    //init output string
+    description = [NSMutableString string];
+    
+    //start JSON
+    [description appendString:@"{"];
+    
+    //add event
+    [description appendString:@"\"event\":"];
+    
+    //add event
+    switch(self.event)
+    {
+        //create
+        case ES_EVENT_TYPE_NOTIFY_CREATE:
+            [description appendString:@"\"ES_EVENT_TYPE_NOTIFY_CREATE\","];
+            break;
+            
+        //open
+        case ES_EVENT_TYPE_NOTIFY_OPEN:
+            [description appendString:@"\"ES_EVENT_TYPE_NOTIFY_OPEN\","];
+            break;
+            
+        //write
+        case ES_EVENT_TYPE_NOTIFY_WRITE:
+            [description appendString:@"\"ES_EVENT_TYPE_NOTIFY_WRITE\","];
+            break;
+            
+        //close
+        case ES_EVENT_TYPE_NOTIFY_CLOSE:
+            [description appendString:@"\"ES_EVENT_TYPE_NOTIFY_CLOSE\","];
+            break;
+            
+        //rename
+        case ES_EVENT_TYPE_NOTIFY_RENAME:
+            [description appendString:@"\"ES_EVENT_TYPE_NOTIFY_RENAME\","];
+            break;
+            
+        //link
+        case ES_EVENT_TYPE_NOTIFY_LINK:
+            [description appendString:@"\"ES_EVENT_TYPE_NOTIFY_LINK\","];
+            break;
+            
+        //unlink
+        case ES_EVENT_TYPE_NOTIFY_UNLINK:
+            [description appendString:@"\"ES_EVENT_TYPE_NOTIFY_UNLINK\","];
+            break;
+            
+        default:
+            break;
+    }
+    
+    //start process
+    [description appendString:@"\"file\":{"];
+    
+    //src path
+    // option, so check
+    if(0 != self.sourcePath)
+    {
+        //add
+        [description appendFormat: @"\"source\":\"%@\",", self.sourcePath];
+    }
+   
+    //dest path
+    [description appendFormat: @"\"destination\":\"%@\",", self.destinationPath];
+    
+    //add process
+    [description appendFormat: @"%@", self.process];
+    
+    //terminate file
+    [description appendString:@"}"];
+    
+    //terminate entire JSON
+    [description appendString:@"}"];
+
+    return description;
 }
 
 @end

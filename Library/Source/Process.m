@@ -1,6 +1,6 @@
 //
 //  Process.m
-//  ProcessMonitor
+//  FileMonitor
 //
 //  Created by Patrick Wardle on 9/1/19.
 //  Copyright © 2019 Objective-See. All rights reserved.
@@ -272,27 +272,120 @@ bail:
 }
 
 //for pretty printing
+// though we convert to JSON
 -(NSString *)description
 {
     //description
-    NSString* description = nil;
+    NSMutableString* description = nil;
+
+    //init output string
+    description = [NSMutableString string];
     
-    //exec/fork events
-    // don't add exit code...
-    if(ES_EVENT_TYPE_NOTIFY_EXIT != self.event)
+    //start process
+    [description appendString:@"\"process\":{"];
+    
+    //add pid, path, etc
+    [description appendFormat: @"\"pid\":%d,\"path\":\"%@\",\"uid\":%d," ,self.pid, self.path, self.uid];
+    
+    //arguments
+    if(0 != self.arguments.count)
     {
-        //pretty print
-        description =  [NSString stringWithFormat: @"pid: %d\npath: %@\nuid: %d\nargs: %@\nancestors: %@\nsigning info: %@", self.pid, self.path, self.uid, self.arguments, self.ancestors, self.signingInfo];
+        //start list
+        [description appendFormat:@"\"arguments\":["];
+        
+        //add all arguments
+        for(NSString* argument in self.arguments)
+        {
+            //add
+            [description appendFormat:@"\"%@\",", [argument stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""]];
+        }
+        
+        //remove last ','
+        if(YES == [description hasSuffix:@","])
+        {
+            //remove
+            [description deleteCharactersInRange:NSMakeRange([description length]-1, 1)];
+        }
+        
+        //terminate list
+        [description appendString:@"],"];
     }
-    //exit event
-    // add exit code
+    //no args
     else
     {
-        description =  [NSString stringWithFormat: @"pid: %d\npath: %@\nuid: %d\nargs: %@\nancestors: %@\nsigning info: %@\nexit code: %d", self.pid, self.path, self.uid, self.arguments, self.ancestors, self.signingInfo, self.exit];
+        //add empty list
+        [description appendFormat:@"\"arguments\":[],"];
     }
     
-    return description;
+    //add ppid
+    [description appendFormat: @"\"ppid\":%d," ,self.ppid];
     
+    //add ancestors
+    [description appendFormat:@"\"ancestors\":["];
+    
+    //add all arguments
+    for(NSNumber* ancestor in self.ancestors)
+    {
+        //add
+        [description appendFormat:@"%d,", ancestor.unsignedIntValue];
+    }
+    
+    //remove last ','
+    if(YES == [description hasSuffix:@","])
+    {
+        //remove
+        [description deleteCharactersInRange:NSMakeRange([description length]-1, 1)];
+    }
+    
+    //terminate list
+    [description appendString:@"],"];
+    
+    //signing info
+    [description appendString:@"\"signing info\":{"];
+    
+    //add all key/value pairs from signing info
+    for(NSString* key in self.signingInfo)
+    {
+        //value
+        id value = self.signingInfo[key];
+        
+        //number?
+        // add as is
+        if(YES == [value isKindOfClass:[NSNumber class]])
+        {
+            //add
+            [description appendFormat:@"\"%@\":%@,", key, value];
+        }
+        //otherwise, escape
+        else
+        {
+            //add
+            [description appendFormat:@"\"%@\":\"%@\",", key, value];
+        }
+    }
+
+    //remove last ','
+    if(YES == [description hasSuffix:@","])
+    {
+       //remove
+       [description deleteCharactersInRange:NSMakeRange([description length]-1, 1)];
+    }
+    
+    //terminate dictionary
+    [description appendString:@"}"];
+    
+    //exit event?
+    // add exit code
+    if(ES_EVENT_TYPE_NOTIFY_EXIT == self.event)
+    {
+        //add exit
+        [description appendFormat:@",\"exit code\":%d", self.exit];
+    }
+    
+    //terminate process
+    [description appendString:@"}"];
+    
+    return description;
 }
 
 @end
@@ -335,4 +428,3 @@ pid_t getParentID(pid_t child)
     
     return parentID;
 }
-

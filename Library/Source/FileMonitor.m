@@ -23,7 +23,6 @@ es_event_type_t events[] = {ES_EVENT_TYPE_NOTIFY_CREATE, ES_EVENT_TYPE_NOTIFY_OP
 
 @implementation FileMonitor
 
-
 //start monitoring
 -(BOOL)start:(FileCallbackBlock)callback
 {
@@ -57,8 +56,30 @@ es_event_type_t events[] = {ES_EVENT_TYPE_NOTIFY_CREATE, ES_EVENT_TYPE_NOTIFY_OP
     if(ES_NEW_CLIENT_RESULT_SUCCESS != result)
     {
         //err msg
-        NSLog(@"ERROR: es_new_client() failed with %d", result);
+        NSLog(@"ERROR: es_new_client() failed");
         
+        //provide more info
+        switch (result) {
+                
+            //not entitled
+            case ES_NEW_CLIENT_RESULT_ERR_NOT_ENTITLED:
+                NSLog(@"ES_NEW_CLIENT_RESULT_ERR_NOT_ENTITLED: \"The caller is not properly entitled to connect\"");
+                break;
+                      
+            //not permitted
+            case ES_NEW_CLIENT_RESULT_ERR_NOT_PERMITTED:
+                NSLog(@"ES_NEW_CLIENT_RESULT_ERR_NOT_PERMITTED: \"The caller is not permitted to connect. They lack Transparency, Consent, and Control (TCC) approval form the user.\"");
+                break;
+                      
+            //not privileged
+            case ES_NEW_CLIENT_RESULT_ERR_NOT_PRIVILEGED:
+                NSLog(@"ES_NEW_CLIENT_RESULT_ERR_NOT_PRIVILEGED: \"The caller is not running as root\"");
+                break;
+                
+            default:
+                break;
+        }
+    
         //bail
         goto bail;
     }
@@ -75,7 +96,7 @@ es_event_type_t events[] = {ES_EVENT_TYPE_NOTIFY_CREATE, ES_EVENT_TYPE_NOTIFY_OP
     
     //mute self
     // note: you might not want this, but for a cmdline-based filemonitor
-    //       this ensures we don't constantly report writes to /dev/tty
+    //       this ensures we don't constantly report writes to current /dev/tty
     es_mute_path_literal(endpointClient, [NSProcessInfo.processInfo.arguments[0] UTF8String]);
     
     //subscribe

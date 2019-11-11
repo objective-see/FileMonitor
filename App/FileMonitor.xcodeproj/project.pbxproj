@@ -1,0 +1,377 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		CD38A85B2358B5FC004EBB67 /* libEndpointSecurity.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CD38A85A2358B5FC004EBB67 /* libEndpointSecurity.tbd */; };
+		CD38A85D2358B632004EBB67 /* libbsm.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CD38A85C2358B632004EBB67 /* libbsm.tbd */; };
+		CDB724412374DB72003A3364 /* libFileMonitor.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CDB724402374DB72003A3364 /* libFileMonitor.a */; };
+		CDBF5B842374D63F00B78F3D /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = CDBF5B7C2374D63F00B78F3D /* MainMenu.xib */; };
+		CDBF5B852374D63F00B78F3D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CDBF5B7D2374D63F00B78F3D /* main.m */; };
+		CDBF5B862374D63F00B78F3D /* Base.lproj in Resources */ = {isa = PBXBuildFile; fileRef = CDBF5B7E2374D63F00B78F3D /* Base.lproj */; };
+		CDBF5B882374D63F00B78F3D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CDBF5B812374D63F00B78F3D /* AppDelegate.m */; };
+		CDBF5B892374D63F00B78F3D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CDBF5B832374D63F00B78F3D /* Assets.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		CD38A83D2358B411004EBB67 /* FileMonitor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FileMonitor.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CD38A8582358B5F6004EBB67 /* libProcessMonitor.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libProcessMonitor.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		CD38A85A2358B5FC004EBB67 /* libEndpointSecurity.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libEndpointSecurity.tbd; path = usr/lib/libEndpointSecurity.tbd; sourceTree = SDKROOT; };
+		CD38A85C2358B632004EBB67 /* libbsm.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbsm.tbd; path = usr/lib/libbsm.tbd; sourceTree = SDKROOT; };
+		CDB724402374DB72003A3364 /* libFileMonitor.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libFileMonitor.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		CDBF5B7C2374D63F00B78F3D /* MainMenu.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainMenu.xib; sourceTree = "<group>"; };
+		CDBF5B7D2374D63F00B78F3D /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		CDBF5B7E2374D63F00B78F3D /* Base.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Base.lproj; sourceTree = "<group>"; };
+		CDBF5B7F2374D63F00B78F3D /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CDBF5B802374D63F00B78F3D /* FileMonitor.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = FileMonitor.entitlements; sourceTree = "<group>"; };
+		CDBF5B812374D63F00B78F3D /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		CDBF5B822374D63F00B78F3D /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		CDBF5B832374D63F00B78F3D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		CDC8436B2378BDA200BB78D3 /* main.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = main.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		CD38A83A2358B410004EBB67 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CD38A85D2358B632004EBB67 /* libbsm.tbd in Frameworks */,
+				CDB724412374DB72003A3364 /* libFileMonitor.a in Frameworks */,
+				CD38A85B2358B5FC004EBB67 /* libEndpointSecurity.tbd in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		CD38A8342358B410004EBB67 = {
+			isa = PBXGroup;
+			children = (
+				CDBF5B7B2374D62000B78F3D /* FileMonitor */,
+				CD38A83E2358B411004EBB67 /* Products */,
+				CD38A8572358B5F6004EBB67 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		CD38A83E2358B411004EBB67 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				CD38A83D2358B411004EBB67 /* FileMonitor.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		CD38A8572358B5F6004EBB67 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				CDB724402374DB72003A3364 /* libFileMonitor.a */,
+				CD38A85C2358B632004EBB67 /* libbsm.tbd */,
+				CD38A8582358B5F6004EBB67 /* libProcessMonitor.a */,
+				CD38A85A2358B5FC004EBB67 /* libEndpointSecurity.tbd */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		CDBF5B7B2374D62000B78F3D /* FileMonitor */ = {
+			isa = PBXGroup;
+			children = (
+				CDBF5B822374D63F00B78F3D /* AppDelegate.h */,
+				CDBF5B812374D63F00B78F3D /* AppDelegate.m */,
+				CDBF5B832374D63F00B78F3D /* Assets.xcassets */,
+				CDBF5B7E2374D63F00B78F3D /* Base.lproj */,
+				CDBF5B802374D63F00B78F3D /* FileMonitor.entitlements */,
+				CDBF5B7F2374D63F00B78F3D /* Info.plist */,
+				CDC8436B2378BDA200BB78D3 /* main.h */,
+				CDBF5B7D2374D63F00B78F3D /* main.m */,
+				CDBF5B7C2374D63F00B78F3D /* MainMenu.xib */,
+			);
+			path = FileMonitor;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		CD38A83C2358B410004EBB67 /* FileMonitor */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CD38A84E2358B412004EBB67 /* Build configuration list for PBXNativeTarget "FileMonitor" */;
+			buildPhases = (
+				CD38A8392358B410004EBB67 /* Sources */,
+				CD38A83A2358B410004EBB67 /* Frameworks */,
+				CD38A83B2358B410004EBB67 /* Resources */,
+				CD8B21752366A5A600D3FE6F /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FileMonitor;
+			productName = ProcessMonitor;
+			productReference = CD38A83D2358B411004EBB67 /* FileMonitor.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		CD38A8352358B410004EBB67 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1100;
+				ORGANIZATIONNAME = "Patrick Wardle";
+				TargetAttributes = {
+					CD38A83C2358B410004EBB67 = {
+						CreatedOnToolsVersion = 11.0;
+					};
+				};
+			};
+			buildConfigurationList = CD38A8382358B410004EBB67 /* Build configuration list for PBXProject "FileMonitor" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = CD38A8342358B410004EBB67;
+			productRefGroup = CD38A83E2358B411004EBB67 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				CD38A83C2358B410004EBB67 /* FileMonitor */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		CD38A83B2358B410004EBB67 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CDBF5B862374D63F00B78F3D /* Base.lproj in Resources */,
+				CDBF5B842374D63F00B78F3D /* MainMenu.xib in Resources */,
+				CDBF5B892374D63F00B78F3D /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		CD8B21752366A5A600D3FE6F /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#copy app into Release/\ncp -R $BUILT_PRODUCTS_DIR/$FULL_PRODUCT_NAME $PROJECT_DIR/Release/\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		CD38A8392358B410004EBB67 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CDBF5B882374D63F00B78F3D /* AppDelegate.m in Sources */,
+				CDBF5B852374D63F00B78F3D /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		CD38A84C2358B412004EBB67 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		CD38A84D2358B412004EBB67 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		CD38A84F2358B412004EBB67 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = FileMonitor/FileMonitor.entitlements;
+				CODE_SIGN_IDENTITY = "Developer ID Application";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1.0.0;
+				DEVELOPMENT_TEAM = VBG97UB4TA;
+				ENABLE_HARDENED_RUNTIME = YES;
+				HEADER_SEARCH_PATHS = ../Library/Release;
+				INFOPLIST_FILE = FileMonitor/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = ../Library/Release;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.objective-see.filemonitor";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "File Monitor";
+			};
+			name = Debug;
+		};
+		CD38A8502358B412004EBB67 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = FileMonitor/FileMonitor.entitlements;
+				CODE_SIGN_IDENTITY = "Developer ID Application";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1.0.0;
+				DEVELOPMENT_TEAM = VBG97UB4TA;
+				ENABLE_HARDENED_RUNTIME = YES;
+				HEADER_SEARCH_PATHS = ../Library/Release;
+				INFOPLIST_FILE = FileMonitor/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = ../Library/Release;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.objective-see.filemonitor";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "File Monitor";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		CD38A8382358B410004EBB67 /* Build configuration list for PBXProject "FileMonitor" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CD38A84C2358B412004EBB67 /* Debug */,
+				CD38A84D2358B412004EBB67 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CD38A84E2358B412004EBB67 /* Build configuration list for PBXNativeTarget "FileMonitor" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CD38A84F2358B412004EBB67 /* Debug */,
+				CD38A8502358B412004EBB67 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = CD38A8352358B410004EBB67 /* Project object */;
+}

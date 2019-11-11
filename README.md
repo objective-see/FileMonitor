@@ -1,9 +1,9 @@
-# FileMonitor
-File Monitor Library (based on Apple's new Endpoint Security Framework)
+# ProcessMonitor
+Process Monitor Library (based on Apple's new Endpoint Security Framework)
 
-<p align="center"><img src="https://objective-see.com/images/blog/blog_0x48/twitter.png"></p>
+<p align="center"><img src="https://objective-see.com/images/blog/blog_0x47/twitter.png"></p>
 
-It captures file events (`create`, `open`, `write`, etc) providing path(s) as well as information about the responsible process including: 
+It captures process `start`, `fork`, and `exit` events, providing:
 * pid
 * path
 * ancestory
@@ -11,7 +11,7 @@ It captures file events (`create`, `open`, `write`, etc) providing path(s) as we
 * code-signing information
 
 **Read More:** \
-For more details read: ["Writing a File Monitor with Apple's Endpoint Security Framework"](https://objective-see.com/blog/blog_0x48.html).
+For more details read: ["Writing a Process Monitor with Apple's Endpoint Security Framework"](https://objective-see.com/blog/blog_0x47.html).
 
 **To Support:** \
 &#x2764;&nbsp; Love this product or want to support it? Please check out my [patreon page](https://www.patreon.com/objective_see) :)
