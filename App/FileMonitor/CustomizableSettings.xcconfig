@@ -1,0 +1,20 @@
+//
+//  CustomizableSettings.xcconfig
+//  FileMonitor
+//
+//  Created by Matt Gough on 12/11/19.
+//  Copyright © 2019 Patrick Wardle. All rights reserved.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+// This file contains all of the build settings you need to customize in order to build FileMonitor with your own development profile.
+// Moving these out of the Xcode project file makes future merging from objective-see's version of that project file simpler.
+// By default these settings contain objective-see's settings and will not be usable by others.
+PRODUCT_BUNDLE_IDENTIFIER       = com.objective-see.filemonitor
+
+CODE_SIGN_IDENTITY              = Developer ID Application
+CODE_SIGN_STYLE                 = Manual
+DEVELOPMENT_TEAM                = VBG97UB4TA
+PROVISIONING_PROFILE_SPECIFIER  = File Monitor

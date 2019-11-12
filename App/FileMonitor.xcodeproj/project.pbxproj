@@ -17,6 +17,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9080C461237AB15E008B3893 /* CustomizableSettings.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = CustomizableSettings.xcconfig; sourceTree = "<group>"; };
 		CD38A83D2358B411004EBB67 /* FileMonitor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FileMonitor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD38A8582358B5F6004EBB67 /* libProcessMonitor.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libProcessMonitor.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD38A85A2358B5FC004EBB67 /* libEndpointSecurity.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libEndpointSecurity.tbd; path = usr/lib/libEndpointSecurity.tbd; sourceTree = SDKROOT; };
@@ -82,6 +83,7 @@
 				CDBF5B812374D63F00B78F3D /* AppDelegate.m */,
 				CDBF5B832374D63F00B78F3D /* Assets.xcassets */,
 				CDBF5B7E2374D63F00B78F3D /* Base.lproj */,
+				9080C461237AB15E008B3893 /* CustomizableSettings.xcconfig */,
 				CDBF5B802374D63F00B78F3D /* FileMonitor.entitlements */,
 				CDBF5B7F2374D63F00B78F3D /* Info.plist */,
 				CDC8436B2378BDA200BB78D3 /* main.h */,
@@ -279,14 +281,12 @@
 		};
 		CD38A84F2358B412004EBB67 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9080C461237AB15E008B3893 /* CustomizableSettings.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = FileMonitor/FileMonitor.entitlements;
-				CODE_SIGN_IDENTITY = "Developer ID Application";
-				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1.0.0;
-				DEVELOPMENT_TEAM = VBG97UB4TA;
 				ENABLE_HARDENED_RUNTIME = YES;
 				HEADER_SEARCH_PATHS = ../Library/Release;
 				INFOPLIST_FILE = FileMonitor/Info.plist;
@@ -296,22 +296,18 @@
 				);
 				LIBRARY_SEARCH_PATHS = ../Library/Release;
 				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.objective-see.filemonitor";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "File Monitor";
 			};
 			name = Debug;
 		};
 		CD38A8502358B412004EBB67 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9080C461237AB15E008B3893 /* CustomizableSettings.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = FileMonitor/FileMonitor.entitlements;
-				CODE_SIGN_IDENTITY = "Developer ID Application";
-				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1.0.0;
-				DEVELOPMENT_TEAM = VBG97UB4TA;
 				ENABLE_HARDENED_RUNTIME = YES;
 				HEADER_SEARCH_PATHS = ../Library/Release;
 				INFOPLIST_FILE = FileMonitor/Info.plist;
@@ -321,9 +317,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = ../Library/Release;
 				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.objective-see.filemonitor";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "File Monitor";
 			};
 			name = Release;
 		};
