@@ -15,16 +15,14 @@
 #import <Foundation/Foundation.h>
 #import <EndpointSecurity/EndpointSecurity.h>
 
-//endpoint
+//endpoint client
 es_client_t *endpointClient = nil;
-
-//file events of interest
-es_event_type_t events[] = {ES_EVENT_TYPE_NOTIFY_CREATE, ES_EVENT_TYPE_NOTIFY_OPEN, ES_EVENT_TYPE_NOTIFY_WRITE, ES_EVENT_TYPE_NOTIFY_CLOSE, ES_EVENT_TYPE_NOTIFY_RENAME, ES_EVENT_TYPE_NOTIFY_LINK, ES_EVENT_TYPE_NOTIFY_UNLINK};
 
 @implementation FileMonitor
 
 //start monitoring
--(BOOL)start:(FileCallbackBlock)callback
+// pass in events of interest, count of said events, and callback
+-(BOOL)start:(es_event_type_t*)events count:(uint32_t)count callback:(FileCallbackBlock)callback
 {
     //flag
     BOOL started = NO;
@@ -100,7 +98,7 @@ es_event_type_t events[] = {ES_EVENT_TYPE_NOTIFY_CREATE, ES_EVENT_TYPE_NOTIFY_OP
     es_mute_path_literal(endpointClient, [NSProcessInfo.processInfo.arguments[0] UTF8String]);
     
     //subscribe
-    if(ES_RETURN_SUCCESS != es_subscribe(endpointClient, events, sizeof(events)/sizeof(events[0])))
+    if(ES_RETURN_SUCCESS != es_subscribe(endpointClient, events, count))
     {
         //err msg
         NSLog(@"ERROR: es_subscribe() failed");

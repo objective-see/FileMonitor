@@ -30,7 +30,8 @@ typedef void (^FileCallbackBlock)(File* _Nonnull);
 @interface FileMonitor : NSObject
 
 //start monitoring
--(BOOL)start:(FileCallbackBlock _Nonnull )callback;
+// pass in events of interest, count of said events, and callback
+-(BOOL)start:(es_event_type_t* _Nonnull)events count:(uint32_t)count callback:(FileCallbackBlock _Nonnull)callback;
 
 //stop monitoring
 -(BOOL)stop;

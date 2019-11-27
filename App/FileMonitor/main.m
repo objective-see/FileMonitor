@@ -142,6 +142,9 @@ bail:
 //monitor
 BOOL monitor()
 {
+    //events of interest
+    es_event_type_t events[] = {ES_EVENT_TYPE_NOTIFY_CREATE, ES_EVENT_TYPE_NOTIFY_OPEN, ES_EVENT_TYPE_NOTIFY_WRITE, ES_EVENT_TYPE_NOTIFY_CLOSE, ES_EVENT_TYPE_NOTIFY_RENAME, ES_EVENT_TYPE_NOTIFY_LINK, ES_EVENT_TYPE_NOTIFY_UNLINK};
+
     //init monitor
     FileMonitor* fileMon = [[FileMonitor alloc] init];
     
@@ -189,8 +192,9 @@ BOOL monitor()
     };
         
     //start monitoring
-    // pass in block for events
-    return [fileMon start:block];
+    // pass in events, count, and callback block for events
+    return [fileMon start:events count:sizeof(events)/sizeof(events[0]) callback:block];
+            
 }
 
 //prettify JSON
