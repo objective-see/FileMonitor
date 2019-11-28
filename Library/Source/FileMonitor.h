@@ -48,6 +48,9 @@ typedef void (^FileCallbackBlock)(File* _Nonnull);
 // create, write, etc...
 @property u_int32_t event;
 
+//timestamp
+@property(nonatomic, retain)NSDate* _Nonnull timestamp;
+
 //src path
 @property(nonatomic, retain)NSString* _Nullable sourcePath;
 

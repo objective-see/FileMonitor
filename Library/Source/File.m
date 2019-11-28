@@ -18,6 +18,7 @@
 @implementation File
 
 @synthesize process;
+@synthesize timestamp;
 @synthesize sourcePath;
 @synthesize destinationPath;
 
@@ -30,6 +31,9 @@
     {
         //set type
         self.event = message->event_type;
+        
+        //set timestamp
+        self.timestamp = [NSDate date];
         
         //set process
         self.process = [[Process alloc] init:message];
@@ -217,7 +221,10 @@
             break;
     }
     
-    //start process
+    //add timestamp
+    [description appendFormat:@"\"timestamp\":\"%@\",", self.timestamp];
+    
+    //start file
     [description appendString:@"\"file\":{"];
     
     //src path
