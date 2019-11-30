@@ -18,7 +18,32 @@
 //endpoint client
 es_client_t *endpointClient = nil;
 
+@interface FileMonitor ()
+
+//process args (via `ES_EVENT_TYPE_NOTIFY_EXEC`)
+// so save, to report with all other file i/o events
+@property(atomic, retain)NSMutableDictionary* arguments;
+
+@end
+
 @implementation FileMonitor
+
+//args
+@synthesize arguments;
+
+//init
+-(id)init
+{
+    //init super
+    self = [super init];
+    if(nil != self)
+    {
+        //alloc agrugments dictionary
+        arguments = [NSMutableDictionary dictionary];
+    }
+    
+    return self;
+}
 
 //start monitoring
 // pass in events of interest, count of said events, and callback
@@ -42,9 +67,28 @@ es_client_t *endpointClient = nil;
         File* file = nil;
         
         //init file obj
+        // contains some extra logic for process args
         file = [[File alloc] init:(es_message_t* _Nonnull)message];
         if(nil != file)
         {
+            //process args
+            // but don't report file event...
+            if( (ES_EVENT_TYPE_NOTIFY_EXEC == message->event_type) ||
+                (ES_EVENT_TYPE_NOTIFY_EXIT == message->event_type) )
+            {
+                //process args
+                [self processArgs:message file:file];
+                
+                return;
+            }
+                
+            //add args
+            if(nil != self.arguments[[NSNumber numberWithInt:file.process.pid]])
+            {
+                //add
+                file.process.arguments = self.arguments[[NSNumber numberWithInt:file.process.pid]];
+            }
+        
             //invoke user callback
             callback(file);
         }
@@ -115,6 +159,29 @@ es_client_t *endpointClient = nil;
 bail:
     
     return started;
+}
+
+//process args
+-(void)processArgs:(const es_message_t*)message file:(File*)file
+{
+    //process exec?
+    // save arguments
+    if( (nil != file.process.arguments) &&
+        (ES_EVENT_TYPE_NOTIFY_EXEC == message->event_type) )
+    {
+        //save args
+        self.arguments[[NSNumber numberWithInt:file.process.pid]] = file.process.arguments;
+    }
+    
+    //process exit?
+    // remove process args
+    else if(ES_EVENT_TYPE_NOTIFY_EXIT == message->event_type)
+    {
+        //remove args
+        [self.arguments removeObjectForKey:[NSNumber numberWithInt:file.process.pid]];
+    }
+    
+    return;
 }
 
 //stop

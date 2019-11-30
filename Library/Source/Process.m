@@ -81,14 +81,6 @@ pid_t getParentID(pid_t child);
                 
                 break;
                 
-            //fork
-            case ES_EVENT_TYPE_NOTIFY_FORK:
-                
-                //set process (child)
-                process = message->event.fork.child;
-                
-                break;
-                
             //exit
             case ES_EVENT_TYPE_NOTIFY_EXIT:
                 
@@ -126,7 +118,6 @@ pid_t getParentID(pid_t child);
         
         //enum ancestors
         [self enumerateAncestors];
-        
     }
     
     return self;
@@ -213,7 +204,7 @@ bail:
     for(uint32_t i = 0; i<CS_CDHASH_LEN; i++)
     {
         //append
-        [cdHash appendFormat:@"%X", process->cdhash[i]];
+        [cdHash appendFormat:@"%02X", process->cdhash[i]];
     }
     
     //add cdhash

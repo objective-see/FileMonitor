@@ -24,7 +24,7 @@ BOOL prettyPrint = NO;
 
 /* FUNCTIONS */
 
-//process args
+//process user-specifed args
 BOOL processArgs(NSArray* arguments);
 
 //print usage

@@ -57,7 +57,6 @@
         //create
         case ES_EVENT_TYPE_NOTIFY_CREATE:
         {
-            
             //directory
             NSString* directory = nil;
             
