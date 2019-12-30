@@ -1,6 +1,6 @@
 //
 //  Process.m
-//  FileMonitor
+//  ProcessMonitor
 //
 //  Created by Patrick Wardle on 9/1/19.
 //  Copyright © 2019 Objective-See. All rights reserved.
@@ -10,6 +10,7 @@
 #import <bsm/libbsm.h>
 #import <sys/sysctl.h>
 
+#import "signing.h"
 #import "utilities.h"
 #import "FileMonitor.h"
 
@@ -23,6 +24,7 @@ pid_t getParentID(pid_t child);
 
 @synthesize pid;
 @synthesize exit;
+@synthesize name;
 @synthesize path;
 @synthesize ppid;
 @synthesize event;
@@ -32,7 +34,8 @@ pid_t getParentID(pid_t child);
 @synthesize signingInfo;
 
 //init
--(id)init:(es_message_t*)message
+// flag controls code signing options
+-(id)init:(es_message_t*)message csOption:(BOOL)csOption
 {
     //init super
     self = [super init];
@@ -41,11 +44,15 @@ pid_t getParentID(pid_t child);
         //process from msg
         es_process_t* process = NULL;
         
+        //string value
+        // used for various conversions
+        NSString* string = nil;
+        
         //alloc array for args
         self.arguments = [NSMutableArray array];
         
         //alloc array for parents
-        self.ancestors  = [NSMutableArray array];
+        self.ancestors = [NSMutableArray array];
         
         //alloc dictionary for signing info
         self.signingInfo = [NSMutableDictionary dictionary];
@@ -66,9 +73,9 @@ pid_t getParentID(pid_t child);
         self.event = message->event_type;
         
         //event specific logic
-        // set type
-        // extract (relevant) process object, etc
-        switch (message->event_type) {
+        // a) set type
+        // b) extract (relevant) process object, etc
+        switch(message->event_type) {
             
             //exec
             case ES_EVENT_TYPE_NOTIFY_EXEC:
@@ -78,6 +85,14 @@ pid_t getParentID(pid_t child);
                 
                 //extract/format args
                 [self extractArgs:&message->event];
+                
+                break;
+                
+            //fork
+            case ES_EVENT_TYPE_NOTIFY_FORK:
+                
+                //set process (child)
+                process = message->event.fork.child;
                 
                 break;
                 
@@ -103,6 +118,14 @@ pid_t getParentID(pid_t child);
         
         //init pid
         self.pid = audit_token_to_pid(process->audit_token);
+        if(0 == self.pid)
+        {
+            //unset
+            self = nil;
+        
+            //bail
+            goto bail;
+        }
         
         //init ppid
         self.ppid = process->ppid;
@@ -113,16 +136,104 @@ pid_t getParentID(pid_t child);
         //init path
         self.path = convertStringToken(&process->executable->path);
         
-        //extract/format code signing info
-        [self extractSigningInfo:process];
+        //now generate name
+        [self generateName];
+    
+        //add cs flags
+        self.csFlags = [NSNumber numberWithUnsignedInt:process->codesigning_flags];
+        
+        //convert/add signing id
+        if(nil != (string = convertStringToken(&process->signing_id)))
+        {
+            //add
+            self.signingID = string;
+        }
+        
+        //convert/add team id
+        if(nil != (string = convertStringToken(&process->team_id)))
+        {
+            //add
+            self.teamID = string;
+        }
+        
+        //add platform binary
+        self.isPlatformBinary = [NSNumber numberWithBool:process->is_platform_binary];
+        
+        //alloc
+        self.cdHash = [NSMutableString string];
+        
+        //format cdhash
+        for(uint32_t i=0; i<CS_CDHASH_LEN; i++)
+        {
+            //append
+            [self.cdHash appendFormat:@"%02X", process->cdhash[i]];
+        }
+        
+        //generate
+        [self generateCSInfo:csOption];
         
         //enum ancestors
         [self enumerateAncestors];
     }
     
+bail:
+    
     return self;
 }
 
+//generate code signing info
+// sets 'signingInfo' iVar with resuls
+-(void)generateCSInfo:(BOOL)csOption
+{
+    //generate via helper function
+    self.signingInfo = generateSigningInfo(self, csOption, kSecCSDefaultFlags);
+    
+    return;
+}
+
+//get process' name
+// either via app bundle, or path
+-(void)generateName
+{
+    //app path
+    NSString* appPath = nil;
+    
+    //app bundle
+    NSBundle* appBundle = nil;
+    
+    //convert path to app path
+    // generally, <blah.app>/Contents/MacOS/blah
+    appPath = [[[self.path stringByDeletingLastPathComponent] stringByDeletingLastPathComponent] stringByDeletingLastPathComponent];
+    if(YES != [appPath hasSuffix:@".app"])
+    {
+        //bail
+        goto bail;
+        
+    }
+    
+    //try load bundle
+    // and verify it's the 'right' bundle
+    appBundle = [NSBundle bundleWithPath:appPath];
+    if( (nil != appBundle) &&
+        (YES == [appBundle.executablePath isEqualToString:self.path]) )
+    {
+        //grab name from app's bundle
+        self.name = [appBundle infoDictionary][@"CFBundleName"];
+    }
+    
+bail:
+    
+    //still nil?
+    // just grab from path
+    if(nil == self.name)
+    {
+        //from path
+        self.name = [self.path lastPathComponent];
+    }
+    
+    
+    return;
+}
 //extract/format args
 -(void)extractArgs:(es_events_t *)event
 {
@@ -201,7 +312,7 @@ bail:
     self.signingInfo[KEY_SIGNATURE_PLATFORM_BINARY] = [NSNumber numberWithBool:process->is_platform_binary];
     
     //format cdhash
-    for(uint32_t i = 0; i<CS_CDHASH_LEN; i++)
+    for(uint32_t i=0; i<CS_CDHASH_LEN; i++)
     {
         //append
         [cdHash appendFormat:@"%02X", process->cdhash[i]];
@@ -272,11 +383,44 @@ bail:
     //init output string
     description = [NSMutableString string];
     
+    //start JSON
+    [description appendString:@"{"];
+    
+    //add event
+    [description appendString:@"\"event\":"];
+    
+    //add event
+    switch(self.event)
+    {
+        //exec
+        case ES_EVENT_TYPE_NOTIFY_EXEC:
+            [description appendString:@"\"ES_EVENT_TYPE_NOTIFY_EXEC\","];
+            break;
+            
+        //fork
+        case ES_EVENT_TYPE_NOTIFY_FORK:
+            [description appendString:@"\"ES_EVENT_TYPE_NOTIFY_FORK\","];
+            break;
+            
+        //exit
+        case ES_EVENT_TYPE_NOTIFY_EXIT:
+            [description appendString:@"\"ES_EVENT_TYPE_NOTIFY_EXIT\","];
+            break;
+            
+        //default
+        default:
+            [description appendFormat:@"\"%d\",", self.event];
+            break;
+    }
+    
+    //add timestamp
+    [description appendFormat:@"\"timestamp\":\"%@\",", self.timestamp];
+    
     //start process
     [description appendString:@"\"process\":{"];
     
     //add pid, path, etc
-    [description appendFormat: @"\"pid\":%d,\"path\":\"%@\",\"uid\":%d," ,self.pid, self.path, self.uid];
+    [description appendFormat: @"\"pid\":%d,\"path\":\"%@\",\"uid\":%d,",self.pid, self.path, self.uid];
     
     //arguments
     if(0 != self.arguments.count)
@@ -314,7 +458,7 @@ bail:
     //add ancestors
     [description appendFormat:@"\"ancestors\":["];
     
-    //add all arguments
+    //add each ancestor
     for(NSNumber* ancestor in self.ancestors)
     {
         //add
@@ -330,6 +474,9 @@ bail:
     
     //terminate list
     [description appendString:@"],"];
+    
+    //add cs flags, signing id, team id, etc
+    [description appendFormat: @"\"csFlags\":%d,\"platformBinary\":%d,\"signingID\":\"%@\",\"teamID\":\"%@\",\"cdHash\":\"%@\",", self.csFlags.intValue, self.isPlatformBinary.intValue, self.signingID, self.teamID, self.cdHash];
     
     //signing info
     [description appendString:@"\"signing info\":{"];
@@ -347,14 +494,39 @@ bail:
             //add
             [description appendFormat:@"\"%@\":%@,", key, value];
         }
-        //otherwise, escape
+        //array
+        else if(YES == [value isKindOfClass:[NSArray class]])
+        {
+            //start
+            [description appendFormat:@"\"%@\":[", key];
+            
+            //add each item
+            [value enumerateObjectsUsingBlock:^(id obj, NSUInteger index, BOOL * _Nonnull stop) {
+                
+                //add
+                [description appendFormat:@"\"%@\"", obj];
+                
+                //add ','
+                if(index != ((NSArray*)value).count-1)
+                {
+                    //add
+                    [description appendString:@","];
+                }
+                
+            }];
+            
+            //terminate
+            [description appendString:@"],"];
+        }
+        //otherwise
+        // just escape it
         else
         {
             //add
             [description appendFormat:@"\"%@\":\"%@\",", key, value];
         }
     }
-
+    
     //remove last ','
     if(YES == [description hasSuffix:@","])
     {
@@ -376,6 +548,9 @@ bail:
     //terminate process
     [description appendString:@"}"];
     
+    //terminate entire JSON
+    [description appendString:@"}"];
+
     return description;
 }
 

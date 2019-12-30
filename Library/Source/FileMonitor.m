@@ -47,7 +47,7 @@ es_client_t *endpointClient = nil;
 
 //start monitoring
 // pass in events of interest, count of said events, and callback
--(BOOL)start:(es_event_type_t*)events count:(uint32_t)count callback:(FileCallbackBlock)callback
+-(BOOL)start:(es_event_type_t*)events count:(uint32_t)count csOption:(BOOL)csOption callback:(FileCallbackBlock)callback
 {
     //flag
     BOOL started = NO;
@@ -67,11 +67,11 @@ es_client_t *endpointClient = nil;
         File* file = nil;
         
         //init file obj
-        // contains some extra logic for process args
-        file = [[File alloc] init:(es_message_t* _Nonnull)message];
+        // then generate args, code-signing info, etc
+        file = [[File alloc] init:(es_message_t* _Nonnull)message csOption:csOption];
         if(nil != file)
         {
-            //process args
+            //extract/process args
             // but don't report file event...
             if( (ES_EVENT_TYPE_NOTIFY_EXEC == message->event_type) ||
                 (ES_EVENT_TYPE_NOTIFY_EXIT == message->event_type) )
@@ -174,7 +174,7 @@ bail:
     }
     
     //process exit?
-    // remove process args
+    // remove saved process args
     else if(ES_EVENT_TYPE_NOTIFY_EXIT == message->event_type)
     {
         //remove args

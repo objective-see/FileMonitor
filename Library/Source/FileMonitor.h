@@ -18,6 +18,24 @@
 #define KEY_SIGNATURE_TEAM_IDENTIFIER @"teamIdentifier"
 #define KEY_SIGNATURE_PLATFORM_BINARY @"isPlatformBinary"
 
+//signers
+enum Signer{None, Apple, AppStore, DevID, AdHoc};
+
+//cs options
+#define CS_STATIC_CHECK YES
+
+//signature status
+#define KEY_SIGNATURE_STATUS @"signatureStatus"
+
+//signer
+#define KEY_SIGNATURE_SIGNER @"signatureSigner"
+
+//signing auths
+#define KEY_SIGNATURE_AUTHORITIES @"signatureAuthorities"
+
+//code signing id
+#define KEY_SIGNATURE_IDENTIFIER @"signatureIdentifier"
+
 /* CLASSES */
 @class File;
 @class Process;
@@ -30,8 +48,8 @@ typedef void (^FileCallbackBlock)(File* _Nonnull);
 @interface FileMonitor : NSObject
 
 //start monitoring
-// pass in events of interest, count of said events, and callback
--(BOOL)start:(es_event_type_t* _Nonnull)events count:(uint32_t)count callback:(FileCallbackBlock _Nonnull)callback;
+// pass in events of interest, count of said events, flag for codesigning, and callback
+-(BOOL)start:(es_event_type_t* _Nonnull)events count:(uint32_t)count csOption:(BOOL)csOption callback:(FileCallbackBlock _Nonnull)callback;
 
 //stop monitoring
 -(BOOL)stop;
@@ -63,10 +81,9 @@ typedef void (^FileCallbackBlock)(File* _Nonnull);
 /* METHODS */
 
 //init
--(id _Nullable)init:(es_message_t* _Nonnull)message;
+-(id _Nullable)init:(es_message_t* _Nonnull)message csOption:(BOOL)csOption;
 
 @end
-
 
 /* OBJECT: PROCESS */
 
@@ -90,6 +107,9 @@ typedef void (^FileCallbackBlock)(File* _Nonnull);
 //exit code
 @property int exit;
 
+//name
+@property(nonatomic, retain)NSString* _Nullable name;
+
 //path
 @property(nonatomic, retain)NSString* _Nullable path;
 
@@ -99,7 +119,23 @@ typedef void (^FileCallbackBlock)(File* _Nonnull);
 //ancestors
 @property(nonatomic, retain)NSMutableArray* _Nonnull ancestors;
 
+//platform binary
+@property(nonatomic, retain)NSNumber* _Nonnull isPlatformBinary;
+
+//csflags
+@property(nonatomic, retain)NSNumber* _Nonnull csFlags;
+
+//cd hash
+@property(nonatomic, retain)NSMutableString* _Nonnull cdHash;
+
+//signing ID
+@property(nonatomic, retain)NSString* _Nonnull signingID;
+
+//team ID
+@property(nonatomic, retain)NSString* _Nonnull teamID;
+
 //signing info
+// manually generated via CS APIs if `codesign:TRUE` is set
 @property(nonatomic, retain)NSMutableDictionary* _Nonnull signingInfo;
 
 //timestamp
@@ -108,6 +144,11 @@ typedef void (^FileCallbackBlock)(File* _Nonnull);
 /* METHODS */
 
 //init
--(id _Nullable)init:(es_message_t* _Nonnull)message;
+// flag controls code signing options
+-(id _Nullable)init:(es_message_t* _Nonnull)message csOption:(BOOL)csOption;
+
+//generate code signing info
+// sets 'signingInfo' iVar with resuls
+-(void)generateCSInfo:(BOOL)csOption;
 
 @end

@@ -23,7 +23,7 @@
 @synthesize destinationPath;
 
 //init
--(id)init:(es_message_t*)message
+-(id)init:(es_message_t*)message csOption:(BOOL)csOption
 {
     //init super
     self = [super init];
@@ -36,13 +36,23 @@
         self.timestamp = [NSDate date];
         
         //set process
-        self.process = [[Process alloc] init:message];
+        self.process = [[Process alloc] init:message csOption:csOption];
+        if(nil == process)
+        {
+            //unset
+            self = nil;
+        
+            //bail
+            goto bail;
+        }
         
         //extract path(s)
         // logic is specific to event
         [self extractPaths:message];
-    
     }
+    
+bail:
+    
     
     return self;
 }

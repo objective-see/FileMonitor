@@ -13,7 +13,7 @@ int main(int argc, const char * argv[]) {
     
     //return var
     int status = -1;
-
+    
     @autoreleasepool {
         
         //args
@@ -194,8 +194,7 @@ BOOL monitor()
         
     //start monitoring
     // pass in events, count, and callback block for events
-    return [fileMon start:events count:sizeof(events)/sizeof(events[0]) callback:block];
-            
+    return [fileMon start:events count:sizeof(events)/sizeof(events[0]) csOption:CS_STATIC_CHECK callback:block];
 }
 
 //prettify JSON
