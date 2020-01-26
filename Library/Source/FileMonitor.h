@@ -12,11 +12,12 @@
 /* CONSTS */
 
 //code signing keys
-#define KEY_SIGNATURE_CDHASH @"cdHash"
 #define KEY_SIGNATURE_FLAGS @"csFlags"
-#define KEY_SIGNATURE_IDENTIFIER @"signatureIdentifier"
-#define KEY_SIGNATURE_TEAM_IDENTIFIER @"teamIdentifier"
-#define KEY_SIGNATURE_PLATFORM_BINARY @"isPlatformBinary"
+#define KEY_SIGNATURE_STATUS @"signatureStatus"
+#define KEY_SIGNATURE_SIGNER @"signatureSigner"
+#define KEY_SIGNATURE_IDENTIFIER @"signatureID"
+#define KEY_SIGNATURE_TEAM_IDENTIFIER @"teamID"
+#define KEY_SIGNATURE_AUTHORITIES @"signatureAuthorities"
 
 //code sign options
 enum csOptions{csNone, csStatic, csDynamic};
@@ -26,18 +27,6 @@ enum Signer{None, Apple, AppStore, DevID, AdHoc};
 
 //cs options
 #define CS_STATIC_CHECK YES
-
-//signature status
-#define KEY_SIGNATURE_STATUS @"signatureStatus"
-
-//signer
-#define KEY_SIGNATURE_SIGNER @"signatureSigner"
-
-//signing auths
-#define KEY_SIGNATURE_AUTHORITIES @"signatureAuthorities"
-
-//code signing id
-#define KEY_SIGNATURE_IDENTIFIER @"signatureIdentifier"
 
 /* CLASSES */
 @class File;

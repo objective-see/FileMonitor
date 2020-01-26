@@ -159,7 +159,7 @@ BOOL monitor()
         
         //ingore apple?
         if( (YES == skipApple) &&
-            (YES == [file.process.signingInfo[KEY_SIGNATURE_PLATFORM_BINARY] boolValue]))
+            (YES == file.process.isPlatformBinary.boolValue))
         {
             //ignore
             return;
@@ -203,6 +203,9 @@ NSString* prettifyJSON(NSString* output)
     //data
     NSData* data = nil;
     
+    //error
+    NSError* error = nil;
+    
     //object
     id object = nil;
     
@@ -214,33 +217,44 @@ NSString* prettifyJSON(NSString* output)
     
     //covert to data
     data = [output dataUsingEncoding:NSUTF8StringEncoding];
-    
+   
     //convert to JSON
     // wrap since we are serializing JSON
     @try
     {
         //serialize
-        object = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+        object = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        if(nil == object)
+        {
+            //bail
+            goto bail;
+        }
         
         //covert to pretty data
-        prettyData =  [NSJSONSerialization dataWithJSONObject:object options:NSJSONWritingPrettyPrinted error:nil];
+        prettyData = [NSJSONSerialization dataWithJSONObject:object options:NSJSONWritingPrettyPrinted error:&error];
+        if(nil == prettyData)
+        {
+            //bail
+            goto bail;
+        }
     }
     //ignore exceptions (here)
     @catch(NSException *exception)
     {
-        ;
+        //bail
+        goto bail;
     }
     
-    //covert to pretty string
-    if(nil != prettyData)
+    //convert to string
+    // note, we manually unescape forward slashes
+    prettyString = [[[NSString alloc] initWithData:prettyData encoding:NSUTF8StringEncoding] stringByReplacingOccurrencesOfString:@"\\/" withString:@"/"];
+   
+bail:
+    
+    //error?
+    if(nil == prettyString)
     {
-        //convert to string
-        // note, we manually unescape forward slashes
-        prettyString = [[[NSString alloc] initWithData:prettyData encoding:NSUTF8StringEncoding] stringByReplacingOccurrencesOfString:@"\\/" withString:@"/"];
-    }
-    else
-    {
-        //error
+        //init error
         prettyString = @"{\"error\" : \"failed to convert output to JSON\"}";
     }
     

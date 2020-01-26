@@ -65,11 +65,27 @@ NSMutableDictionary* generateSigningInfo(Process* process, NSUInteger options, S
         goto bail;
     }
     
+    /*
+    //extract code signing flags
+    if(nil != [(__bridge NSDictionary*)signingDetails objectForKey:(__bridge NSString*)kSecCodeInfoFlags])
+    {
+        //extract/save
+        signingInfo[KEY_SIGNATURE_FLAGS] = [(__bridge NSDictionary*)signingDetails objectForKey:(__bridge NSString*)kSecCodeInfoFlags];
+    }
+    */
+    
     //extract code signing id
     if(nil != [(__bridge NSDictionary*)signingDetails objectForKey:(__bridge NSString*)kSecCodeInfoIdentifier])
     {
         //extract/save
         signingInfo[KEY_SIGNATURE_IDENTIFIER] = [(__bridge NSDictionary*)signingDetails objectForKey:(__bridge NSString*)kSecCodeInfoIdentifier];
+    }
+    
+    //extract team signing id
+    if(nil != [(__bridge NSDictionary*)signingDetails objectForKey:(__bridge NSString*)kSecCodeInfoTeamIdentifier])
+    {
+        //extract/save
+        signingInfo[KEY_SIGNATURE_TEAM_IDENTIFIER] = [(__bridge NSDictionary*)signingDetails objectForKey:(__bridge NSString*)kSecCodeInfoTeamIdentifier];
     }
     
     //extract signing authorities

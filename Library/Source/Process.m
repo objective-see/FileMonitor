@@ -278,56 +278,6 @@ bail:
     return;
 }
 
-//extract/format signing info
--(void)extractSigningInfo:(es_process_t *)process
-{
-    //cd hash
-    NSMutableString* cdHash = nil;
-    
-    //signing id
-    NSString* signingID = nil;
-    
-    //team id
-    NSString* teamID = nil;
-    
-    //alloc string for hash
-    cdHash = [NSMutableString string];
-    
-    //add flags
-    self.signingInfo[KEY_SIGNATURE_FLAGS] = [NSNumber numberWithUnsignedInt:process->codesigning_flags];
-    
-    //convert/add signing id
-    signingID = convertStringToken(&process->signing_id);
-    if(nil != signingID)
-    {
-        //add
-        self.signingInfo[KEY_SIGNATURE_IDENTIFIER] = signingID;
-    }
-    
-    //convert/add team id
-    teamID = convertStringToken(&process->team_id);
-    if(nil != teamID)
-    {
-        //add
-        self.signingInfo[KEY_SIGNATURE_TEAM_IDENTIFIER] = teamID;
-    }
-    
-    //add platform binary
-    self.signingInfo[KEY_SIGNATURE_PLATFORM_BINARY] = [NSNumber numberWithBool:process->is_platform_binary];
-    
-    //format cdhash
-    for(uint32_t i=0; i<CS_CDHASH_LEN; i++)
-    {
-        //append
-        [cdHash appendFormat:@"%02X", process->cdhash[i]];
-    }
-    
-    //add cdhash
-    self.signingInfo[KEY_SIGNATURE_CDHASH] = cdHash;
-    
-    return;
-}
-
 //generate list of ancestors
 -(void)enumerateAncestors
 {
@@ -386,39 +336,6 @@ bail:
 
     //init output string
     description = [NSMutableString string];
-    
-    //start JSON
-    [description appendString:@"{"];
-    
-    //add event
-    [description appendString:@"\"event\":"];
-    
-    //add event
-    switch(self.event)
-    {
-        //exec
-        case ES_EVENT_TYPE_NOTIFY_EXEC:
-            [description appendString:@"\"ES_EVENT_TYPE_NOTIFY_EXEC\","];
-            break;
-            
-        //fork
-        case ES_EVENT_TYPE_NOTIFY_FORK:
-            [description appendString:@"\"ES_EVENT_TYPE_NOTIFY_FORK\","];
-            break;
-            
-        //exit
-        case ES_EVENT_TYPE_NOTIFY_EXIT:
-            [description appendString:@"\"ES_EVENT_TYPE_NOTIFY_EXIT\","];
-            break;
-            
-        //default
-        default:
-            [description appendFormat:@"\"%d\",", self.event];
-            break;
-    }
-    
-    //add timestamp
-    [description appendFormat:@"\"timestamp\":\"%@\",", self.timestamp];
     
     //start process
     [description appendString:@"\"process\":{"];
@@ -479,11 +396,17 @@ bail:
     //terminate list
     [description appendString:@"],"];
     
+    //signing info (reported)
+    [description appendString:@"\"signing info (reported)\":{"];
+ 
     //add cs flags, signing id, team id, etc
     [description appendFormat: @"\"csFlags\":%d,\"platformBinary\":%d,\"signingID\":\"%@\",\"teamID\":\"%@\",\"cdHash\":\"%@\",", self.csFlags.intValue, self.isPlatformBinary.intValue, self.signingID, self.teamID, self.cdHash];
-    
+ 
+    //terminate dictionary
+    [description appendString:@"},"];
+ 
     //signing info
-    [description appendString:@"\"signing info\":{"];
+    [description appendString:@"\"signing info (computed)\":{"];
     
     //add all key/value pairs from signing info
     for(NSString* key in self.signingInfo)
@@ -491,9 +414,39 @@ bail:
         //value
         id value = self.signingInfo[key];
         
+        //handle `KEY_SIGNATURE_SIGNER`
+        if(YES == [key isEqualToString:KEY_SIGNATURE_SIGNER])
+        {
+            //Signer{None, Apple, AppStore, DevID, AdHoc};
+            switch ([value intValue]) {
+                case None:
+                    [description appendFormat:@"\"%@\":\"%@\",", key, @"none"];
+                    break;
+                    
+                case Apple:
+                    [description appendFormat:@"\"%@\":\"%@\",", key, @"Apple"];
+                    break;
+                    
+                case AppStore:
+                    [description appendFormat:@"\"%@\":\"%@\",", key, @"App Store"];
+                break;
+                    
+                case DevID:
+                    [description appendFormat:@"\"%@\":\"%@\",", key, @"Developer ID"];
+                    break;
+    
+                case AdHoc:
+                   [description appendFormat:@"\"%@\":\"%@\",", key, @"AdHoc"];
+                   break;
+                    
+                default:
+                    break;
+            }
+        }
+        
         //number?
         // add as is
-        if(YES == [value isKindOfClass:[NSNumber class]])
+        else if(YES == [value isKindOfClass:[NSNumber class]])
         {
             //add
             [description appendFormat:@"\"%@\":%@,", key, value];
@@ -550,9 +503,6 @@ bail:
     }
     
     //terminate process
-    [description appendString:@"}"];
-    
-    //terminate entire JSON
     [description appendString:@"}"];
 
     return description;
