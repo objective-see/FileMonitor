@@ -47,7 +47,7 @@ es_client_t *endpointClient = nil;
 
 //start monitoring
 // pass in events of interest, count of said events, and callback
--(BOOL)start:(es_event_type_t*)events count:(uint32_t)count csOption:(BOOL)csOption callback:(FileCallbackBlock)callback
+-(BOOL)start:(es_event_type_t*)events count:(uint32_t)count csOption:(NSUInteger)csOption callback:(FileCallbackBlock)callback
 {
     //flag
     BOOL started = NO;

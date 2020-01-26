@@ -21,7 +21,7 @@
 //get the signing info of a item
 // pid specified: extract dynamic code signing info
 // path specified: generate static code signing info
-NSMutableDictionary* generateSigningInfo(Process* process, BOOL option, SecCSFlags flags);
+NSMutableDictionary* generateSigningInfo(Process* process, NSUInteger options, SecCSFlags flags);
 
 //extract signing info/check via dynamic code ref (process pid)
 CFDictionaryRef dynamicCodeCheck(Process* process, SecCSFlags flags, NSMutableDictionary* signingInfo);

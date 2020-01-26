@@ -18,6 +18,9 @@
 #define KEY_SIGNATURE_TEAM_IDENTIFIER @"teamIdentifier"
 #define KEY_SIGNATURE_PLATFORM_BINARY @"isPlatformBinary"
 
+//code sign options
+enum csOptions{csNone, csStatic, csDynamic};
+
 //signers
 enum Signer{None, Apple, AppStore, DevID, AdHoc};
 
@@ -49,7 +52,7 @@ typedef void (^FileCallbackBlock)(File* _Nonnull);
 
 //start monitoring
 // pass in events of interest, count of said events, flag for codesigning, and callback
--(BOOL)start:(es_event_type_t* _Nonnull)events count:(uint32_t)count csOption:(BOOL)csOption callback:(FileCallbackBlock _Nonnull)callback;
+-(BOOL)start:(es_event_type_t* _Nonnull)events count:(uint32_t)count csOption:(NSUInteger)csOption callback:(FileCallbackBlock _Nonnull)callback;
 
 //stop monitoring
 -(BOOL)stop;
@@ -81,7 +84,7 @@ typedef void (^FileCallbackBlock)(File* _Nonnull);
 /* METHODS */
 
 //init
--(id _Nullable)init:(es_message_t* _Nonnull)message csOption:(BOOL)csOption;
+-(id _Nullable)init:(es_message_t* _Nonnull)message csOption:(NSUInteger)csOption;
 
 @end
 
@@ -145,10 +148,10 @@ typedef void (^FileCallbackBlock)(File* _Nonnull);
 
 //init
 // flag controls code signing options
--(id _Nullable)init:(es_message_t* _Nonnull)message csOption:(BOOL)csOption;
+-(id _Nullable)init:(es_message_t* _Nonnull)message csOption:(NSUInteger)csOption;
 
 //generate code signing info
 // sets 'signingInfo' iVar with resuls
--(void)generateCSInfo:(BOOL)csOption;
+-(void)generateCSInfo:(NSUInteger)csOption;
 
 @end

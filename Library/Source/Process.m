@@ -35,7 +35,7 @@ pid_t getParentID(pid_t child);
 
 //init
 // flag controls code signing options
--(id)init:(es_message_t*)message csOption:(BOOL)csOption
+-(id)init:(es_message_t*)message csOption:(NSUInteger)csOption
 {
     //init super
     self = [super init];
@@ -169,8 +169,13 @@ pid_t getParentID(pid_t child);
             [self.cdHash appendFormat:@"%02X", process->cdhash[i]];
         }
         
-        //generate
-        [self generateCSInfo:csOption];
+        //when specified
+        // generate full code signing info
+        if(csNone != csOption)
+        {
+            //generate code signing info
+            [self generateCSInfo:csOption];
+        }
         
         //enum ancestors
         [self enumerateAncestors];
@@ -183,7 +188,7 @@ bail:
 
 //generate code signing info
 // sets 'signingInfo' iVar with resuls
--(void)generateCSInfo:(BOOL)csOption
+-(void)generateCSInfo:(NSUInteger)csOption
 {
     //generate via helper function
     self.signingInfo = generateSigningInfo(self, csOption, kSecCSDefaultFlags);
@@ -208,7 +213,6 @@ bail:
     {
         //bail
         goto bail;
-        
     }
     
     //try load bundle

@@ -16,7 +16,7 @@
 //get the signing info of a item
 // pid specified: extract dynamic code signing info
 // path specified: generate static code signing info
-NSMutableDictionary* generateSigningInfo(Process* process, BOOL option, SecCSFlags flags)
+NSMutableDictionary* generateSigningInfo(Process* process, NSUInteger options, SecCSFlags flags)
 {
     //status
     OSStatus status = !errSecSuccess;
@@ -41,7 +41,7 @@ NSMutableDictionary* generateSigningInfo(Process* process, BOOL option, SecCSFla
     
     //on (certain) errors
     // do static, if option is set
-    if( (CS_STATIC_CHECK == option) &&
+    if( (csStatic == options) &&
         ( (kPOSIXErrorESRCH == status)  ||
           (errSecCSNoSuchCode == status) ||
           (errSecCSStaticCodeChanged == status) ) )

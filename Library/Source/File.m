@@ -23,7 +23,7 @@
 @synthesize destinationPath;
 
 //init
--(id)init:(es_message_t*)message csOption:(BOOL)csOption
+-(id)init:(es_message_t*)message csOption:(NSUInteger)csOption
 {
     //init super
     self = [super init];
