@@ -1,5 +1,5 @@
 //
-//  Process.m
+//  File.m
 //  FileMonitor
 //
 //  Created by Patrick Wardle on 9/1/19.
@@ -13,6 +13,11 @@
 #import "utilities.h"
 #import "FileMonitor.h"
 
+/* GLOBALS */
+
+//process cache
+extern NSCache* processCache;
+
 /* FUNCTIONS */
 
 @implementation File
@@ -25,6 +30,9 @@
 //init
 -(id)init:(es_message_t*)message csOption:(NSUInteger)csOption
 {
+    //process audit token
+    NSData* auditToken = nil;
+    
     //init super
     self = [super init];
     if(nil != self)
@@ -35,24 +43,42 @@
         //set timestamp
         self.timestamp = [NSDate date];
         
-        //set process
-        self.process = [[Process alloc] init:message csOption:csOption];
-        if(nil == process)
-        {
-            //unset
-            self = nil;
-        
-            //bail
-            goto bail;
+        //sync for process creation
+        @synchronized (processCache) {
+            
+            //init audit token
+            auditToken = [NSData dataWithBytes:&message->process->audit_token length:sizeof(audit_token_t)];
+            
+            //check cache for process
+            // not found? create process obj...
+            self.process = [processCache objectForKey:auditToken];
+            if(nil == self.process)
+            {
+                //create process
+                self.process = [[Process alloc] init:message csOption:csOption];
+            }
+    
+            //sanity check
+            // process creation failed?
+            if(nil == process)
+            {
+                //unset
+                self = nil;
+            
+                //bail
+                goto bail;
+            }
+            
+            //add to cache
+            [processCache setObject:process forKey:auditToken];
         }
         
-        //extract path(s)
+        //extract file path(s)
         // logic is specific to event
         [self extractPaths:message];
     }
     
 bail:
-    
     
     return self;
 }

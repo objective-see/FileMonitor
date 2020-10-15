@@ -118,7 +118,7 @@ typedef void (^FileCallbackBlock)(File* _Nonnull);
 @property(nonatomic, retain)NSNumber* _Nonnull csFlags;
 
 //cd hash
-@property(nonatomic, retain)NSMutableString* _Nonnull cdHash;
+@property(nonatomic, retain)NSString* _Nonnull cdHash;
 
 //signing ID
 @property(nonatomic, retain)NSString* _Nonnull signingID;

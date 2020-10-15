@@ -296,6 +296,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = ../Library/Release;
 				MARKETING_VERSION = 1.2.0;
+				OTHER_CODE_SIGN_FLAGS = "--timestamp";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.objective-see.filemonitor";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "File Monitor";
@@ -321,6 +322,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = ../Library/Release;
 				MARKETING_VERSION = 1.2.0;
+				OTHER_CODE_SIGN_FLAGS = "--timestamp";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.objective-see.filemonitor";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "File Monitor";

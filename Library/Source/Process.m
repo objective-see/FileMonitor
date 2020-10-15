@@ -14,6 +14,12 @@
 #import "utilities.h"
 #import "FileMonitor.h"
 
+/* GLOBALS */
+
+//resp
+extern pid_t (*getRPID)(pid_t pid);
+
+
 /* FUNCTIONS */
 
 //helper function
@@ -159,15 +165,8 @@ pid_t getParentID(pid_t child);
         //add platform binary
         self.isPlatformBinary = [NSNumber numberWithBool:process->is_platform_binary];
         
-        //alloc
-        self.cdHash = [NSMutableString string];
-        
-        //format cdhash
-        for(uint32_t i=0; i<CS_CDHASH_LEN; i++)
-        {
-            //append
-            [self.cdHash appendFormat:@"%02X", process->cdhash[i]];
-        }
+        //save cd hash
+        self.cdHash = [[NSString alloc] initWithData:[NSData dataWithBytes:(const void *)process->cdhash length:sizeof(uint8_t)*CS_CDHASH_LEN] encoding:NSUTF8StringEncoding];
         
         //when specified
         // generate full code signing info
@@ -222,7 +221,7 @@ bail:
         (YES == [appBundle.executablePath isEqualToString:self.path]) )
     {
         //grab name from app's bundle
-        self.name = [appBundle infoDictionary][@"CFBundleName"];
+        self.name = [appBundle infoDictionary][@"CFBundleDisplayName"];
     }
     
 bail:
@@ -287,30 +286,54 @@ bail:
     //parent pid
     pid_t parentPID = -1;
     
+    //for parent
+    // first try rPID
+    if(NULL != getRPID)
+    {
+        //get rpid
+        parentPID = getRPID(pid);
+    }
+    
+    //couldn't find/get rPID?
+    // default back to using ppid
+    if( (parentPID <= 0) ||
+        (self.pid == parentPID) )
+    {
+        //use ppid
+        parentPID = self.ppid;
+    }
+    
+    //add self
+    [self.ancestors addObject:[NSNumber numberWithInt:self.pid]];
+    
     //add parent
-    if(-1 != self.ppid)
-    {
-        //add
-        [self.ancestors addObject:[NSNumber numberWithInt:self.ppid]];
+    [self.ancestors addObject:[NSNumber numberWithInt:parentPID]];
         
-        //set current to parent
-        currentPID = self.ppid;
-    }
-    //don't know parent
-    // just start with self
-    else
-    {
-        //start w/ self
-        currentPID = self.pid;
-    }
+    //set current to parent
+    currentPID = parentPID;
     
     //complete ancestry
     while(YES)
     {
-        //get parent pid
-        parentPID = getParentID(currentPID);
-        if( (0 == parentPID) ||
-            (-1 == parentPID) ||
+        //for parent
+        // first try via rPID
+        if(NULL != getRPID)
+        {
+            //get rpid
+            parentPID = getRPID(currentPID);
+        }
+        
+        //couldn't find/get rPID?
+        // default back to using standard method
+        if( (parentPID <= 0) ||
+            (currentPID == parentPID) )
+        {
+            //get parent pid
+            parentPID = getParentID(currentPID);
+        }
+        
+        //done?
+        if( (parentPID <= 0) ||
             (currentPID == parentPID) )
         {
             //bail
@@ -417,24 +440,30 @@ bail:
         //handle `KEY_SIGNATURE_SIGNER`
         if(YES == [key isEqualToString:KEY_SIGNATURE_SIGNER])
         {
-            //Signer{None, Apple, AppStore, DevID, AdHoc};
+            //convert to pritable
             switch ([value intValue]) {
+            
+                //'None'
                 case None:
                     [description appendFormat:@"\"%@\":\"%@\",", key, @"none"];
                     break;
                     
+                //'Apple'
                 case Apple:
                     [description appendFormat:@"\"%@\":\"%@\",", key, @"Apple"];
                     break;
-                    
+                
+                //'App Store'
                 case AppStore:
                     [description appendFormat:@"\"%@\":\"%@\",", key, @"App Store"];
-                break;
+                    break;
                     
+                //'Developer ID'
                 case DevID:
                     [description appendFormat:@"\"%@\":\"%@\",", key, @"Developer ID"];
                     break;
     
+                //'AdHoc'
                 case AdHoc:
                    [description appendFormat:@"\"%@\":\"%@\",", key, @"AdHoc"];
                    break;

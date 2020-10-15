@@ -12,11 +12,20 @@
 #import "utilities.h"
 #import "FileMonitor.h"
 
+#import <dlfcn.h>
 #import <Foundation/Foundation.h>
 #import <EndpointSecurity/EndpointSecurity.h>
 
+/* GLOBALS */
+
 //endpoint client
 es_client_t *endpointClient = nil;
+
+//pointer to responsibility_get_pid_responsible_for_pid()
+pid_t (*getRPID)(pid_t pid) = NULL;
+
+//process cache
+NSCache* processCache = NULL;
 
 @interface FileMonitor ()
 
@@ -40,6 +49,15 @@ es_client_t *endpointClient = nil;
     {
         //alloc agrugments dictionary
         arguments = [NSMutableDictionary dictionary];
+        
+        //get function pointer
+        getRPID = dlsym(RTLD_NEXT, "responsibility_get_pid_responsible_for_pid");
+        
+        //init process cache
+        processCache = [[NSCache alloc] init];
+        
+        //set cache limit
+        processCache.countLimit = 2048;
     }
     
     return self;
@@ -98,7 +116,7 @@ es_client_t *endpointClient = nil;
     if(ES_NEW_CLIENT_RESULT_SUCCESS != result)
     {
         //err msg
-        NSLog(@"ERROR: es_new_client() failed");
+        NSLog(@"ERROR: es_new_client() failed with %#x", result);
         
         //provide more info
         switch (result) {
