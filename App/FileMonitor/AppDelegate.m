@@ -3,7 +3,7 @@
 //  FileMonitor
 //
 //  Created by Patrick Wardle on 10/17/19.
-//  Copyright © 2019 Patrick Wardle. All rights reserved.
+//  Copyright © 2020 Patrick Wardle. All rights reserved.
 //
 
 #import "AppDelegate.h"
@@ -29,20 +29,31 @@
     return;
 }
 
-- (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
+//make close button first responder
+-(void)applicationDidFinishLaunching:(NSNotification *)aNotification {
     
+    //first responder
+    [self.window makeFirstResponder:[self.window.contentView viewWithTag:1]];
 }
 
 //exit on window close
-- (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)theApplication {
+-(BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)theApplication {
     return YES;
 }
 
-//open 'user guide'
-- (IBAction)moreInfo:(id)sender {
+//open product documentation
+-(IBAction)moreInfo:(id)sender {
     
+    //open
     [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:PRODUCT_URL]];
 }
 
+//close app
+-(IBAction)close:(id)sender {
+    
+    //close
+    // will trigger exit
+    [self.window close];
+}
 
 @end

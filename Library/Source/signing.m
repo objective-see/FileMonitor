@@ -1,9 +1,9 @@
 //
 //  File: Signing.m
-//  Project: Proc Info
+//  Project: FileMonitor
 //
 //  Created by: Patrick Wardle
-//  Copyright:  2017 Objective-See
+//  Copyright:  2020 Objective-See
 //  License:    Creative Commons Attribution-NonCommercial 4.0 International License
 //
 
@@ -65,12 +65,14 @@ NSMutableDictionary* generateSigningInfo(Process* process, NSUInteger options, S
         goto bail;
     }
     
+    /*
     //extract code signing flags
     if(nil != [(__bridge NSDictionary*)signingDetails objectForKey:(__bridge NSString*)kSecCodeInfoFlags])
     {
         //extract/save
         signingInfo[KEY_SIGNATURE_FLAGS] = [(__bridge NSDictionary*)signingDetails objectForKey:(__bridge NSString*)kSecCodeInfoFlags];
     }
+    */
     
     //extract code signing id
     if(nil != [(__bridge NSDictionary*)signingDetails objectForKey:(__bridge NSString*)kSecCodeInfoIdentifier])
@@ -150,6 +152,14 @@ CFDictionaryRef dynamicCodeCheck(Process* process, SecCSFlags flags, NSMutableDi
     //determine signer
     // apple, app store, dev id, adhoc, etc...
     signingInfo[KEY_SIGNATURE_SIGNER] = extractSigner(dynamicCode, flags, YES);
+    
+    //extract signing info
+    status = SecCodeCopySigningInformation(dynamicCode, kSecCSSigningInformation, &signingDetails);
+    if(errSecSuccess != status)
+    {
+        //bail
+        goto bail;
+    }
     
 bail:
     

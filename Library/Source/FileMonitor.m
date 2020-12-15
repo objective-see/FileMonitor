@@ -3,7 +3,7 @@
 //  FileMonitor
 //
 //  Created by Patrick Wardle on 9/1/19.
-//  Copyright © 2019 Objective-See. All rights reserved.
+//  Copyright © 2020 Objective-See. All rights reserved.
 //
 
 //  Inspired by https://gist.github.com/Omar-Ikram/8e6721d8e83a3da69b31d4c2612a68ba
@@ -19,9 +19,10 @@
 /* GLOBALS */
 
 //endpoint client
-es_client_t *endpointClient = nil;
+es_client_t* endpointClient = nil;
 
-//pointer to responsibility_get_pid_responsible_for_pid()
+//pointer to function
+// responsibility_get_pid_responsible_for_pid()
 pid_t (*getRPID)(pid_t pid) = NULL;
 
 //process cache

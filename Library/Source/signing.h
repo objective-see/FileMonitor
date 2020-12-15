@@ -1,9 +1,9 @@
 //
 //  File: Signing.h
-//  Project: Proc Info
+//  Project: FileMonitor
 //
 //  Created by: Patrick Wardle
-//  Copyright:  2017 Objective-See
+//  Copyright:  2020 Objective-See
 //  License:    Creative Commons Attribution-NonCommercial 4.0 International License
 //
 
