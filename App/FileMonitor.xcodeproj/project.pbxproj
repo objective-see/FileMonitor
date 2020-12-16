@@ -24,7 +24,6 @@
 		CDB724402374DB72003A3364 /* libFileMonitor.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libFileMonitor.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		CDBF5B7C2374D63F00B78F3D /* MainMenu.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainMenu.xib; sourceTree = "<group>"; };
 		CDBF5B7D2374D63F00B78F3D /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		CDBF5B7E2374D63F00B78F3D /* Base.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Base.lproj; sourceTree = "<group>"; };
 		CDBF5B7F2374D63F00B78F3D /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CDBF5B802374D63F00B78F3D /* FileMonitor.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = FileMonitor.entitlements; sourceTree = "<group>"; };
 		CDBF5B812374D63F00B78F3D /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -81,7 +80,6 @@
 				CDBF5B822374D63F00B78F3D /* AppDelegate.h */,
 				CDBF5B812374D63F00B78F3D /* AppDelegate.m */,
 				CDBF5B832374D63F00B78F3D /* Assets.xcassets */,
-				CDBF5B7E2374D63F00B78F3D /* Base.lproj */,
 				CDBF5B802374D63F00B78F3D /* FileMonitor.entitlements */,
 				CDBF5B7F2374D63F00B78F3D /* Info.plist */,
 				CDC8436B2378BDA200BB78D3 /* main.h */,
