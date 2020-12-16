@@ -1,11 +1,12 @@
 //
 //  Process.m
-//  ProcessMonitor
+//  FileMonitor
 //
 //  Created by Patrick Wardle on 9/1/19.
 //  Copyright © 2020 Objective-See. All rights reserved.
 //
 
+#import <dlfcn.h>
 #import <libproc.h>
 #import <bsm/libbsm.h>
 #import <sys/sysctl.h>
@@ -33,14 +34,15 @@ pid_t getParentID(pid_t child);
 
 @synthesize pid;
 @synthesize exit;
-@synthesize name;
 @synthesize path;
 @synthesize ppid;
 @synthesize event;
 @synthesize ancestors;
 @synthesize arguments;
 @synthesize timestamp;
+@synthesize auditToken;
 @synthesize signingInfo;
+@synthesize architecture;
 
 //init
 // flag controls code signing options
@@ -66,6 +68,9 @@ pid_t getParentID(pid_t child);
         //alloc dictionary for signing info
         self.signingInfo = [NSMutableDictionary dictionary];
         
+        //get function pointer
+        getRPID = dlsym(RTLD_NEXT, "responsibility_get_pid_responsible_for_pid");
+        
         //init exit
         self.exit = -1;
         
@@ -82,9 +87,10 @@ pid_t getParentID(pid_t child);
         self.event = message->event_type;
         
         //event specific logic
-        // a) set type
-        // b) extract (relevant) process object, etc
-        switch(message->event_type) {
+        
+        // set type
+        // extract (relevant) process object, etc
+        switch (message->event_type) {
             
             //exec
             case ES_EVENT_TYPE_NOTIFY_EXEC:
@@ -125,19 +131,17 @@ pid_t getParentID(pid_t child);
                 break;
         }
         
+        //init audit token
+        self.auditToken = [NSData dataWithBytes:&process->audit_token length:sizeof(audit_token_t)];
+        
         //init pid
         self.pid = audit_token_to_pid(process->audit_token);
-        if(0 == self.pid)
-        {
-            //unset
-            self = nil;
-        
-            //bail
-            goto bail;
-        }
         
         //init ppid
         self.ppid = process->ppid;
+        
+        //init rpid
+        if(message->version >= 4) self.rpid = audit_token_to_pid(process->responsible_audit_token);
         
         //init uuid
         self.uid = audit_token_to_euid(process->audit_token);
@@ -146,7 +150,10 @@ pid_t getParentID(pid_t child);
         self.path = convertStringToken(&process->executable->path);
         
         //now generate name
-        self.name = [self generateName];
+        self.name = [self getName];
+        
+        //cpu type
+        self.architecture = [self getArchitecture];
     
         //add cs flags
         self.csFlags = [NSNumber numberWithUnsignedInt:process->codesigning_flags];
@@ -170,7 +177,7 @@ pid_t getParentID(pid_t child);
         
         //save cd hash
         self.cdHash = [NSData dataWithBytes:(const void *)process->cdhash length:sizeof(uint8_t)*CS_CDHASH_LEN];
-        
+               
         //when specified
         // generate full code signing info
         if(csNone != csOption)
@@ -178,18 +185,16 @@ pid_t getParentID(pid_t child);
             //generate code signing info
             [self generateCSInfo:csOption];
         }
-        
+    
         //enum ancestors
         [self enumerateAncestors];
     }
-    
-bail:
     
     return self;
 }
 
 //generate code signing info
-// sets 'signingInfo' iVar with resuls
+// sets 'signingInfo' iVar
 -(void)generateCSInfo:(NSUInteger)csOption
 {
     //generate via helper function
@@ -200,7 +205,7 @@ bail:
 
 //get process' name
 // either via app bundle, or path
--(NSString*)generateName
+-(NSString*)getName
 {
     //name
     NSString* name = nil;
@@ -241,6 +246,102 @@ bail:
     }
     
     return name;
+}
+
+//get process' architecture
+-(NSUInteger)getArchitecture
+{
+    //architecuture
+    NSUInteger architecture = ArchUnknown;
+    
+    //type
+    cpu_type_t type = -1;
+    
+    //size
+    size_t size = 0;
+    
+    //mib
+    int mib[CTL_MAXNAME] = {0};
+    
+    //length
+    size_t length = CTL_MAXNAME;
+    
+    //proc info
+    struct kinfo_proc procInfo = {0};
+    
+    //get mib for 'proc_cputype'
+    if(noErr != sysctlnametomib("sysctl.proc_cputype", mib, &length))
+    {
+        //bail
+        goto bail;
+    }
+    
+    //add pid
+    mib[length] = self.pid;
+    
+    //inc length
+    length++;
+    
+    //init size
+    size = sizeof(cpu_type_t);
+    
+    //get CPU type
+    if(noErr != sysctl(mib, (u_int)length, &type, &size, 0, 0))
+    {
+        //bail
+        goto bail;
+    }
+    
+    //reversing Activity Monitor
+    // if CPU type is CPU_TYPE_X86_64, Apple sets architecture to 'Intel'
+    if(CPU_TYPE_X86_64 == type)
+    {
+        //intel
+        architecture = ArchIntel;
+        
+        //done
+        goto bail;
+    }
+    
+    //reversing Activity Monitor
+    // if CPU type is CPU_TYPE_ARM64, Apple checks proc's p_flags
+    // if P_TRANSLATED is set, then they set architecture to 'Intel'
+    if(CPU_TYPE_ARM64 == type)
+    {
+        //default to apple
+        architecture = ArchAppleSilicon;
+        
+        //(re)init mib
+        mib[0] = CTL_KERN;
+        mib[1] = KERN_PROC;
+        mib[2] = KERN_PROC_PID;
+        mib[3] = pid;
+        
+        //(re)set length
+        length = 4;
+        
+        //(re)set size
+        size = sizeof(procInfo);
+        
+        //get proc info
+        if(noErr != sysctl(mib, (u_int)length, &procInfo, &size, NULL, 0))
+        {
+            //bail
+            goto bail;
+        }
+        
+        //'P_TRANSLATED' set?
+        // set architecture to 'Intel'
+        if(P_TRANSLATED == (P_TRANSLATED & procInfo.kp_proc.p_flag))
+        {
+            //intel
+            architecture = ArchIntel;
+        }
+    }
+    
+bail:
+    
+    return architecture;
 }
 
 //extract/format args
@@ -284,6 +385,7 @@ bail:
 }
 
 //generate list of ancestors
+// note: if possible, built off responsible pid (vs. parent)
 -(void)enumerateAncestors
 {
     //current process id
@@ -291,10 +393,16 @@ bail:
     
     //parent pid
     pid_t parentPID = -1;
-    
-    //for parent
-    // first try rPID
-    if(NULL != getRPID)
+
+    //have rpid (from ESF)
+    // init parent w/ that
+    if(0 != self.rpid)
+    {
+        parentPID = self.rpid;
+    }
+    //no rpid
+    // try lookup via private API
+    else if(NULL != getRPID)
     {
         //get rpid
         parentPID = getRPID(pid);
@@ -308,9 +416,6 @@ bail:
         //use ppid
         parentPID = self.ppid;
     }
-    
-    //add self
-    [self.ancestors addObject:[NSNumber numberWithInt:self.pid]];
     
     //add parent
     [self.ancestors addObject:[NSNumber numberWithInt:parentPID]];
@@ -369,13 +474,32 @@ bail:
 
     //init output string
     description = [NSMutableString string];
-    
+
     //start process
     [description appendString:@"\"process\":{"];
-    
+       
     //add pid, path, etc
     [description appendFormat: @"\"pid\":%d,\"name\":\"%@\",\"path\":\"%@\",\"uid\":%d,",self.pid, self.name, self.path, self.uid];
    
+    //add cpu type
+    switch(self.architecture)
+    {
+        //intel
+        case ArchIntel:
+            [description appendFormat: @"\"architecture\":\"Intel\","];
+            break;
+        
+        //apple
+        case ArchAppleSilicon:
+            [description appendFormat: @"\"architecture\":\"Apple Silicon\","];
+            break;
+
+        //unknown
+        default:
+            [description appendString:@"\"architecture\":\"unknown\","];
+            break;
+    }
+    
     //arguments
     if(0 != self.arguments.count)
     {
@@ -411,6 +535,9 @@ bail:
 
     //add ppid
     [description appendFormat: @"\"ppid\":%d,", self.ppid];
+    
+    //add rpdi
+    [description appendFormat: @"\"rpid\":%d,", self.rpid];
 
     //add ancestors
     [description appendFormat:@"\"ancestors\":["];
@@ -584,7 +711,7 @@ bail:
        //add exit
        [description appendFormat:@",\"exit code\":%d", self.exit];
     }
-    
+
     //terminate process
     [description appendString:@"}"];
 
