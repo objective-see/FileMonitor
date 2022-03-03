@@ -93,6 +93,7 @@ pid_t getParentID(pid_t child);
         switch (message->event_type) {
             
             //exec
+            case ES_EVENT_TYPE_AUTH_EXEC:
             case ES_EVENT_TYPE_NOTIFY_EXEC:
                 
                 //set process (target)

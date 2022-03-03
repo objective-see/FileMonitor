@@ -114,6 +114,21 @@ CFDictionaryRef dynamicCodeCheck(Process* process, SecCSFlags flags, NSMutableDi
     //signing details
     CFDictionaryRef signingDetails = NULL;
     
+    //token
+    static dispatch_once_t onceToken = 0;
+    
+    //is notarized requirement
+    static SecRequirementRef isNotarized = nil;
+    
+    //only once
+    // init notarization requirements
+    dispatch_once(&onceToken, ^{
+        
+        //init
+        SecRequirementCreateWithString(CFSTR("notarized"), kSecCSDefaultFlags, &isNotarized);
+        
+    });
+    
     //obtain dynamic code ref from (audit) token
     status = SecCodeCopyGuestWithAttributes(NULL, (__bridge CFDictionaryRef _Nullable)(@{(__bridge NSString *)kSecGuestAttributeAudit:process.auditToken}), kSecCSDefaultFlags, &dynamicCode);
     if(errSecSuccess != status)
@@ -142,6 +157,10 @@ CFDictionaryRef dynamicCodeCheck(Process* process, SecCSFlags flags, NSMutableDi
     //determine signer
     // apple, app store, dev id, adhoc, etc...
     signingInfo[KEY_SIGNATURE_SIGNER] = extractSigner(dynamicCode, flags, YES);
+    
+    //set notarization status
+    // note: SecStaticCodeCheckValidity returns 0 on success, hence the `!`
+    signingInfo[KEY_SIGNING_IS_NOTARIZED] = [NSNumber numberWithInt:!SecStaticCodeCheckValidity(dynamicCode, kSecCSDefaultFlags, isNotarized)];
     
     //extract signing info
     status = SecCodeCopySigningInformation(dynamicCode, kSecCSSigningInformation, &signingDetails);
@@ -177,6 +196,21 @@ CFDictionaryRef staticCodeCheck(Process* process, SecCSFlags flags, NSMutableDic
     
     //signing details
     CFDictionaryRef signingDetails = NULL;
+    
+    //token
+    static dispatch_once_t onceToken = 0;
+    
+    //is notarized requirement
+    static SecRequirementRef isNotarized = nil;
+    
+    //only once
+    // init notarization requirements
+    dispatch_once(&onceToken, ^{
+        
+        //init
+        SecRequirementCreateWithString(CFSTR("notarized"), kSecCSDefaultFlags, &isNotarized);
+        
+    });
     
     //sanity check
     if(nil == process.path)
@@ -217,6 +251,10 @@ CFDictionaryRef staticCodeCheck(Process* process, SecCSFlags flags, NSMutableDic
     // apple, app store, dev id, adhoc, etc...
     signingInfo[KEY_SIGNATURE_SIGNER] = extractSigner(staticCode, flags, NO);
     
+    //set notarization status
+    // note: SecStaticCodeCheckValidity returns 0 on success, hence the `!`
+    signingInfo[KEY_SIGNING_IS_NOTARIZED] = [NSNumber numberWithInt:!SecStaticCodeCheckValidity(staticCode, kSecCSDefaultFlags, isNotarized)];
+    
     //extract signing info
     status = SecCodeCopySigningInformation(staticCode, kSecCSSigningInformation, &signingDetails);
     if(errSecSuccess != status)
@@ -252,8 +290,11 @@ NSNumber* extractSigner(SecStaticCodeRef code, SecCSFlags flags, BOOL isDynamic)
     //"anchor apple generic"
     static SecRequirementRef isDevID = nil;
     
-    //"anchor apple generic and certificate leaf [subject.CN] = \"Apple Mac OS Application Signing\""
+    //"Apple Mac OS Application Signing"
     static SecRequirementRef isAppStore = nil;
+    
+    //"Apple iPhone OS Application Signing"
+    static SecRequirementRef isiOSAppStore = nil;
     
     //token
     static dispatch_once_t onceToken = 0;
@@ -268,8 +309,11 @@ NSNumber* extractSigner(SecStaticCodeRef code, SecCSFlags flags, BOOL isDynamic)
         //init dev id signing requirement
         SecRequirementCreateWithString(CFSTR("anchor apple generic"), kSecCSDefaultFlags, &isDevID);
         
-        //init app store signing requirement
+        //init (macOS) app store signing requirement
         SecRequirementCreateWithString(CFSTR("anchor apple generic and certificate leaf [subject.CN] = \"Apple Mac OS Application Signing\""), kSecCSDefaultFlags, &isAppStore);
+        
+        //init (iOS) app store signing requirement
+        SecRequirementCreateWithString(CFSTR("anchor apple generic and certificate leaf [subject.CN] = \"Apple iPhone OS Application Signing\""), kSecCSDefaultFlags, &isiOSAppStore);
     });
     
     //check 1: "is apple" (proper)
@@ -287,7 +331,15 @@ NSNumber* extractSigner(SecStaticCodeRef code, SecCSFlags flags, BOOL isDynamic)
         signer = [NSNumber numberWithInt:AppStore];
     }
     
-    //check 3: "is dev id"
+    //check 3: "is (iOS) app store"
+    // note: this is more specific than dev id, so also do it first
+    else if(errSecSuccess == validateRequirement(code, isiOSAppStore, flags, isDynamic))
+    {
+        //set signer to app store
+        signer = [NSNumber numberWithInt:AppStore];
+    }
+    
+    //check 4: "is dev id"
     else if(errSecSuccess == validateRequirement(code, isDevID, flags, isDynamic))
     {
         //set signer to dev id
