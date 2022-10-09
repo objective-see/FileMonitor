@@ -514,7 +514,9 @@ bail:
            if(0 == argument.length) continue;
            
            //add
-           [description appendFormat:@"\"%@\",", [argument stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""]];
+           [description appendFormat:@"\"%@\",",
+            [[argument stringByReplacingOccurrencesOfString:@"\\" withString:@"\\\\"]
+             stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""]];
        }
        
        //remove last ','
